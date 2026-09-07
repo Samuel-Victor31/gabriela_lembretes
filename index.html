@@ -11,12 +11,12 @@
     <!-- Header com Toggle Dark/Light -->
     <header class="header">
       <div class="header-content">
-        <h1 class="welcome-title">Bem-vindo, Gabriela!</h1>
+        <h1 class="welcome-title">Bem-vindo, Gabriela! 👋</h1>
         <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">🌙</button>
       </div>
       <p class="daily-message" id="dailyMessage"></p>
     </header>
-
+ 
     <!-- Seção de Ações -->
     <section class="actions-section">
       <div class="actions-container">
@@ -30,7 +30,7 @@
         </button>
       </div>
     </section>
-
+ 
     <!-- Modal para Adicionar Lembrete -->
     <div id="modalAdicionar" class="modal hidden">
       <div class="modal-content">
@@ -59,7 +59,7 @@
         </form>
       </div>
     </div>
-
+ 
     <!-- Modal para Verificar/Gerenciar Lembretes (NOVO) -->
     <div id="modalVerificar" class="modal-verificar hidden">
       <div class="modal-verificar-content">
@@ -67,7 +67,7 @@
           <h2>📋 Verificar Lembretes</h2>
           <button class="close-btn-verificar" id="closeVerificar">&times;</button>
         </div>
-
+ 
         <!-- Filtros -->
         <div class="filtros-section">
           <div class="filtro-group">
@@ -79,7 +79,7 @@
               <option value="todos" selected>Todos</option>
             </select>
           </div>
-
+ 
           <div class="filtro-group">
             <label>Status:</label>
             <select id="filtroStatus">
@@ -88,15 +88,15 @@
               <option value="enviados">Enviados</option>
             </select>
           </div>
-
+ 
           <button class="btn-atualizar-modal" id="btnAtualizarModal">🔄 Atualizar</button>
         </div>
-
+ 
         <!-- Container de Lembretes -->
         <div class="lembretes-verificar-container" id="containerVerificar">
           <div class="loading">Carregando lembretes...</div>
         </div>
-
+ 
         <!-- Estatísticas -->
         <div class="modal-verificar-footer">
           <div class="stats">
@@ -108,7 +108,7 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- Modal de Edição (dentro do modal de verificar) -->
     <div id="modalEditar" class="modal-editar hidden">
       <div class="modal-editar-content">
@@ -116,35 +116,35 @@
           <h2>Editar Lembrete</h2>
           <button class="close-btn" id="closeEditar">&times;</button>
         </div>
-
+ 
         <form id="formEditar" class="form-editar">
           <div class="form-group">
             <label for="editarNome">Nome do Contato</label>
             <input type="text" id="editarNome" placeholder="Digite o nome" maxlength="100">
           </div>
-
+ 
           <div class="form-group">
             <label for="editarTelefone">Telefone</label>
             <input type="text" id="editarTelefone" placeholder="Ex: 5537991118750" maxlength="15">
           </div>
-
+ 
           <div class="form-group">
             <label for="editarData">Data do Lembrete</label>
             <input type="date" id="editarData">
           </div>
-
+ 
           <div class="form-group">
             <label for="editarDescricao">Mensagem</label>
             <textarea id="editarDescricao" placeholder="Descreva o lembrete..." rows="4" maxlength="500"></textarea>
           </div>
-
+ 
           <div class="form-group">
             <label for="editarEnviado">
               <input type="checkbox" id="editarEnviado">
               Marcado como Enviado
             </label>
           </div>
-
+ 
           <div class="modal-editar-buttons">
             <button type="submit" class="btn-salvar-editar">✅ Salvar Alterações</button>
             <button type="button" class="btn-cancelar-editar" id="btnCancelarEditar">Cancelar</button>
@@ -152,7 +152,7 @@
         </form>
       </div>
     </div>
-
+ 
     <!-- Seção de Lembretes do Dia (se quiser manter) -->
     <section class="lembretes-section">
       <div class="lembretes-header">
@@ -167,8 +167,10 @@
       </div>
     </section>
   </div>
-
+ 
   <script src="mensagens.js"></script>
   <script src="main.js"></script>
+  <script src="scroll-gradient.js"></script>
 </body>
 </html>
+ 
