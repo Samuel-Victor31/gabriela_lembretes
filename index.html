@@ -29,10 +29,6 @@
           <span class="btn-text">Verificar Lembretes</span>
         </button>
       </div>
-      <button class="action-btn btn-gerenciar" id="btnGerenciarPrincipal" aria-label="Gerenciar todos os lembretes">
-        <span class="btn-icon">⚙️</span>
-        <span class="btn-text">Gerenciar Lembretes</span>
-      </button>
     </section>
  
     <!-- Modal para Adicionar Lembrete -->
@@ -68,7 +64,7 @@
     <div id="modalVerificar" class="modal-verificar hidden">
       <div class="modal-verificar-content">
         <div class="modal-verificar-header">
-          <h2>📋 Gerenciar Lembretes</h2>
+          <h2>📋 Verificar Lembretes</h2>
           <button class="close-btn-verificar" id="closeVerificar">&times;</button>
         </div>
  
@@ -78,9 +74,9 @@
             <label>Mostrar:</label>
             <select id="filtroSemana">
               <option value="semana">Esta Semana</option>
-              <option value="duas-semanas" selected>Até 2 Semanas</option>
+              <option value="duas-semanas">Até 2 Semanas</option>
               <option value="mes">Este Mês</option>
-              <option value="todos">Todos</option>
+              <option value="todos" selected>Todos</option>
             </select>
           </div>
  
@@ -175,3 +171,4 @@
   <script src="main.js"></script>
 </body>
 </html>
+ 
