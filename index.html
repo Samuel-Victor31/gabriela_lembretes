@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Lembretes - Gabriela</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header com Toggle Dark/Light -->
+    <header class="header">
+      <div class="header-content">
+        <h1 class="welcome-title">Bem-vindo, Gabriela! 👋</h1>
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+      </div>
+      <p class="daily-message" id="dailyMessage"></p>
+    </header>
+
+    <!-- Seção de Ações -->
+    <section class="actions-section">
+      <div class="actions-container">
+        <button class="action-btn btn-add" id="btnAdicionar">
+          <span class="btn-icon">➕</span>
+          <span class="btn-text">Adicionar Lembrete</span>
+        </button>
+        <button class="action-btn btn-verify" id="btnVerificar">
+          <span class="btn-icon">📋</span>
+          <span class="btn-text">Verificar Lembretes</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Modal para Adicionar Lembrete -->
+    <div id="modalAdicionar" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Adicionar Novo Lembrete</h2>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+        <form id="formLembrete" class="form-lembrete">
+          <div class="form-group">
+            <label for="nome">Nome do Contato *</label>
+            <input type="text" id="nome" placeholder="Digite o nome" required>
+          </div>
+
+          <div class="form-group">
+            <label for="telefone">Telefone *</label>
+            <input type="tel" id="telefone" placeholder="(XX) XXXXX-XXXX" required>
+          </div>
+
+          <div class="form-group">
+            <label for="data">Data do Lembrete *</label>
+            <input type="date" id="data" required>
+          </div>
+
+          <div class="form-group">
+            <label for="descricao">Descrição *</label>
+            <textarea id="descricao" placeholder="Descreva o lembrete..." rows="4" required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Salvar Lembrete</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Seção de Lembretes do Dia -->
+    <section class="lembretes-section">
+      <div class="lembretes-header">
+        <h2>📌 Lembretes do Dia</h2>
+        <span class="lembretes-count" id="countLembretes">0</span>
+      </div>
+
+      <div id="containerLembretes" class="lembretes-container">
+        <div class="empty-state">
+          <p>📭 Nenhum lembrete para hoje</p>
+          <p class="empty-text">Clique em "Adicionar Lembrete" para criar um novo</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
