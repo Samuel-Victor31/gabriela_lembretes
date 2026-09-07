@@ -671,7 +671,6 @@ const APP = {
   form: document.getElementById('formLembrete'),
   btnAdicionar: document.getElementById('btnAdicionar'),
   btnVerificar: document.getElementById('btnVerificar'),
-  btnGerenciarPrincipal: document.getElementById('btnGerenciarPrincipal'),
   btnClose: document.getElementById('closeModal'),
   themeToggle: document.getElementById('themeToggle'),
   dailyMessage: document.getElementById('dailyMessage'),
@@ -706,7 +705,6 @@ const APP = {
   adicionarEventos() {
     this.btnAdicionar.addEventListener('click', () => this.abrirModal());
     this.btnVerificar.addEventListener('click', () => this.abrirModalVerificar());
-    this.btnGerenciarPrincipal.addEventListener('click', () => this.abrirModalVerificar());
     this.btnClose.addEventListener('click', () => this.fecharModal());
     this.closeVerificar.addEventListener('click', () => this.fecharModalVerificar());
     this.btnFecharVerificar.addEventListener('click', () => this.fecharModalVerificar());
@@ -1082,37 +1080,17 @@ const APP = {
       const response = await fetch(`${this.API_URL}/api/lembretes`);
       const lembretes = await response.json();
  
-      // Filtrar por período
-      const hoje = new Date();
-      const lembretesFilterados = lembretes.filter(l => {
-        if (!l.data) return false;
- 
-        const dataLembrete = new Date(l.data);
-        let diasAtrás = 0;
- 
-        switch (this.filtroSemana.value) {
-          case 'semana':
-            diasAtrás = 7;
-            break;
-          case 'duas-semanas':
-            diasAtrás = 14;
-            break;
-          case 'mes':
-            diasAtrás = 30;
-            break;
-          default:
-            return true;
+      // IMPORTANTE: Não filtrar por data aqui
+      // Carregar TODOS os lembretes
+      this.lembretesVerificar = lembretes.sort((a, b) => {
+        // Ordenar por data se tiver, senão por ID
+        if (a.data && b.data) {
+          return new Date(b.data) - new Date(a.data);
         }
- 
-        const dataLimite = new Date(hoje);
-        dataLimite.setDate(dataLimite.getDate() - diasAtrás);
- 
-        return dataLembrete >= dataLimite && dataLembrete <= hoje;
+        return b.id - a.id;
       });
  
-      this.lembretesVerificar = lembretesFilterados.sort((a, b) => {
-        return new Date(b.data) - new Date(a.data);
-      });
+      console.log(`📊 Lembretes carregados: ${this.lembretesVerificar.length}`);
  
       this.renderizarLembretesVerificar();
     } catch (error) {
@@ -1131,6 +1109,36 @@ const APP = {
  
     let lembretesExibir = this.lembretesVerificar;
  
+    // Filtrar por período (agora funciona com lembretes sem data também)
+    const periodoFiltro = this.filtroSemana.value;
+    if (periodoFiltro !== 'todos') {
+      const hoje = new Date();
+      lembretesExibir = lembretesExibir.filter(l => {
+        if (!l.data) return true; // Mostrar lembretes sem data em qualquer filtro
+        
+        const dataLembrete = new Date(l.data);
+        let diasAtrás = 0;
+ 
+        switch (periodoFiltro) {
+          case 'semana':
+            diasAtrás = 7;
+            break;
+          case 'duas-semanas':
+            diasAtrás = 14;
+            break;
+          case 'mes':
+            diasAtrás = 30;
+            break;
+        }
+ 
+        const dataLimite = new Date(hoje);
+        dataLimite.setDate(dataLimite.getDate() - diasAtrás);
+ 
+        return dataLembrete >= dataLimite && dataLembrete <= hoje;
+      });
+    }
+ 
+    // Filtrar por status
     if (this.filtroStatus.value === 'pendentes') {
       lembretesExibir = lembretesExibir.filter(l => !l.enviado);
     } else if (this.filtroStatus.value === 'enviados') {
@@ -1161,7 +1169,7 @@ const APP = {
     const card = document.createElement('div');
     card.className = 'lembrete-verificar-card';
  
-    const dataFormatada = new Date(lembrete.data).toLocaleDateString('pt-BR');
+    const dataFormatada = lembrete.data ? new Date(lembrete.data).toLocaleDateString('pt-BR') : 'Sem data';
     const status = lembrete.enviado ? 'Enviado' : 'Pendente';
     const statusClass = lembrete.enviado ? 'status-enviado' : 'status-pendente';
  
