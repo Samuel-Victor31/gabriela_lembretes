@@ -16,6 +16,7 @@
   --transition: all 0.3s ease;
 }
 
+
 body.dark-mode {
   --text-primary: #ffffff;
   --text-secondary: #b0b0b0;
