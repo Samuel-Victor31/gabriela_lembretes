@@ -64,6 +64,37 @@ function fecharModal() {
   FORM.reset();
 }
 
+// Feedback visual
+function mostrarMensagem(tipo, texto) {
+  const div = document.createElement('div');
+  div.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: ${tipo === 'sucesso' ? '#28a745' : '#dc3545'};
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 2000;
+    animation: slideIn 0.3s ease;
+  `;
+  div.textContent = texto;
+  document.body.appendChild(div);
+  
+  setTimeout(() => div.remove(), 3000);
+}
+
+// Copiar para clipboard
+async function copiarTexto(texto, tipo) {
+  try {
+    await navigator.clipboard.writeText(texto);
+    mostrarMensagem('sucesso', `✅ ${tipo} copiado!`);
+  } catch (error) {
+    console.error('Erro ao copiar:', error);
+  }
+}
+
 async function adicionarLembrete(e) {
   e.preventDefault();
 
@@ -82,15 +113,15 @@ async function adicionarLembrete(e) {
     });
 
     if (response.ok) {
-      alert('✅ Lembrete adicionado com sucesso!');
+      mostrarMensagem('sucesso', '✅ Lembrete adicionado!');
       fecharModal();
       carregarLembretesDoDia();
     } else {
-      alert('❌ Erro ao adicionar lembrete');
+      mostrarMensagem('erro', '❌ Erro ao adicionar');
     }
   } catch (error) {
     console.error('Erro:', error);
-    alert('❌ Erro de conexão');
+    mostrarMensagem('erro', '❌ Erro de conexão');
   }
 }
 
@@ -123,7 +154,7 @@ async function carregarLembretesDoDia() {
     });
   } catch (error) {
     console.error('Erro ao carregar lembretes:', error);
-    CONTAINER_LEMBRETES.innerHTML = `<p style="text-align: center; color: red;">Erro ao conectar</p>`;
+    mostrarMensagem('erro', '❌ Erro ao conectar');
   }
 }
 
@@ -139,17 +170,27 @@ function criarCardLembrete(lembrete) {
     <div class="lembrete-header">
       <div class="lembrete-info">
         <h3>${lembrete.nome}</h3>
-        <p class="lembrete-telefone">📱 ${lembrete.telefone}</p>
+        <p class="lembrete-telefone" style="cursor: pointer; user-select: all;" title="Clique para copiar">
+          📱 ${lembrete.telefone}
+        </p>
       </div>
       <span class="lembrete-status ${statusClass}">${status}</span>
     </div>
 
     <div class="lembrete-body">
       <p class="lembrete-data">📅 ${dataFormatada}</p>
-      <p class="lembrete-descricao">${lembrete.descricao}</p>
+      <p class="lembrete-descricao" style="cursor: pointer; user-select: all;" title="Clique para copiar">
+        ${lembrete.descricao}
+      </p>
     </div>
 
     <div class="lembrete-actions">
+      <button class="lembrete-btn btn-copiar" onclick="copiarTexto('${lembrete.telefone}', 'Telefone')">
+        📋 Telefone
+      </button>
+      <button class="lembrete-btn btn-copiar" onclick="copiarTexto('${lembrete.descricao}', 'Mensagem')">
+        📋 Mensagem
+      </button>
       <button class="lembrete-btn btn-enviado" onclick="marcarEnviado(${lembrete.id}, ${!lembrete.enviado})">
         ${lembrete.enviado ? '✓ Enviado' : 'Marcar Enviado'}
       </button>
@@ -158,6 +199,15 @@ function criarCardLembrete(lembrete) {
       </button>
     </div>
   `;
+
+  // Adicionar evento de clique para copiar
+  card.querySelector('.lembrete-telefone').addEventListener('click', () => {
+    copiarTexto(lembrete.telefone, 'Telefone');
+  });
+
+  card.querySelector('.lembrete-descricao').addEventListener('click', () => {
+    copiarTexto(lembrete.descricao, 'Mensagem');
+  });
 
   return card;
 }
@@ -172,9 +222,11 @@ async function marcarEnviado(id, enviado) {
 
     if (response.ok) {
       carregarLembretesDoDia();
+      mostrarMensagem('sucesso', enviado ? '✅ Marcado como enviado!' : '✅ Marcado como pendente!');
     }
   } catch (error) {
     console.error('Erro:', error);
+    mostrarMensagem('erro', '❌ Erro ao atualizar');
   }
 }
 
@@ -188,9 +240,10 @@ async function deletarLembrete(id) {
 
     if (response.ok) {
       carregarLembretesDoDia();
-      alert('✅ Lembrete deletado!');
+      mostrarMensagem('sucesso', '✅ Lembrete deletado!');
     }
   } catch (error) {
     console.error('Erro:', error);
+    mostrarMensagem('erro', '❌ Erro ao deletar');
   }
 }
