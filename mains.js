@@ -1,4 +1,3 @@
-// Configurações
 const API_URL = 'https://lembrete-gabriela.samuelvivi1996.workers.dev';
 const MODAL = document.getElementById('modalAdicionar');
 const FORM = document.getElementById('formLembrete');
@@ -10,7 +9,6 @@ const DAILY_MESSAGE = document.getElementById('dailyMessage');
 const CONTAINER_LEMBRETES = document.getElementById('containerLembretes');
 const COUNT_LEMBRETES = document.getElementById('countLembretes');
 
-// Array de mensagens
 const MENSAGENS = [
   '🌅 Ótimo dia para ser produtivo!',
   '💪 Você consegue conquistar tudo hoje!',
@@ -19,38 +17,31 @@ const MENSAGENS = [
   '☀️ Um novo dia, novas oportunidades!',
 ];
 
-// Inicializar
 document.addEventListener('DOMContentLoaded', () => {
   carregarTemaSalvo();
   gerarMensagemDiaria();
   carregarLembretesDoDia();
   
-  // Event Listeners
   BTN_ADICIONAR.addEventListener('click', abrirModal);
   BTN_VERIFICAR.addEventListener('click', carregarLembretesDoDia);
   BTN_CLOSE.addEventListener('click', fecharModal);
   THEME_TOGGLE.addEventListener('click', alternarTema);
   FORM.addEventListener('submit', adicionarLembrete);
   
-  // Fechar modal ao clicar fora
   MODAL.addEventListener('click', (e) => {
     if (e.target === MODAL) fecharModal();
   });
 });
 
-// Gerar mensagem diária
 function gerarMensagemDiaria() {
   const mensagem = MENSAGENS[Math.floor(Math.random() * MENSAGENS.length)];
   DAILY_MESSAGE.textContent = mensagem;
 }
 
-// Tema Dark/Light
 function alternarTema() {
   document.body.classList.toggle('dark-mode');
   const temaSalvo = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
   localStorage.setItem('tema', temaSalvo);
-  
-  // Mudar emoji do botão
   THEME_TOGGLE.textContent = temaSalvo === 'dark' ? '☀️' : '🌙';
 }
 
@@ -62,7 +53,6 @@ function carregarTemaSalvo() {
   }
 }
 
-// Modal
 function abrirModal() {
   MODAL.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -74,7 +64,6 @@ function fecharModal() {
   FORM.reset();
 }
 
-// Adicionar lembrete
 async function adicionarLembrete(e) {
   e.preventDefault();
 
@@ -105,7 +94,6 @@ async function adicionarLembrete(e) {
   }
 }
 
-// Carregar lembretes do dia
 async function carregarLembretesDoDia() {
   const hoje = new Date().toISOString().split('T')[0];
 
@@ -113,7 +101,6 @@ async function carregarLembretesDoDia() {
     const response = await fetch(`${API_URL}/api/lembretes`);
     const lembretes = await response.json();
 
-    // Filtrar lembretes de hoje
     const lembretesHoje = lembretes.filter(l => l.data.startsWith(hoje));
 
     COUNT_LEMBRETES.textContent = lembretesHoje.length;
@@ -140,7 +127,6 @@ async function carregarLembretesDoDia() {
   }
 }
 
-// Criar card de lembrete
 function criarCardLembrete(lembrete) {
   const card = document.createElement('div');
   card.className = 'lembrete-card';
@@ -176,7 +162,6 @@ function criarCardLembrete(lembrete) {
   return card;
 }
 
-// Marcar como enviado
 async function marcarEnviado(id, enviado) {
   try {
     const response = await fetch(`${API_URL}/api/lembretes/${id}`, {
@@ -193,7 +178,6 @@ async function marcarEnviado(id, enviado) {
   }
 }
 
-// Deletar lembrete
 async function deletarLembrete(id) {
   if (!confirm('Tem certeza que deseja deletar este lembrete?')) return;
 
