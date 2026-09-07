@@ -1,3 +1,4 @@
+
 const MENSAGENS = [
   // Produtividade e Sucesso
   '🌅 Ótimo dia para ser produtiva!',
