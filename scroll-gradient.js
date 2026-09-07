@@ -3,6 +3,7 @@
  * Adicionar após o iniciar do APP
  */
 
+
 // Cores para o gradiente (paleta bonita)
 const PALETA_CORES = [
   { top: '#667eea', bottom: '#764ba2' },    // Roxo
