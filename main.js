@@ -23,7 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
   carregarLembretesDoDia();
   
   BTN_ADICIONAR.addEventListener('click', abrirModal);
-  BTN_VERIFICAR.addEventListener('click', carregarLembretesDoDia);
+  BTN_VERIFICAR.addEventListener('click', () => {
+  mostrarMensagem('sucesso', '🔄 Atualizando...');
+  carregarLembretesDoDia();
+});
   BTN_CLOSE.addEventListener('click', fecharModal);
   THEME_TOGGLE.addEventListener('click', alternarTema);
   FORM.addEventListener('submit', adicionarLembrete);
@@ -231,19 +234,56 @@ async function marcarEnviado(id, enviado) {
 }
 
 async function deletarLembrete(id) {
-  if (!confirm('Tem certeza que deseja deletar este lembrete?')) return;
+  // Mostrar confirmação dinâmica
+  const confirmDelete = document.createElement('div');
+  confirmDelete.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-primary);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    z-index: 3000;
+    text-align: center;
+    border: 2px solid #dc3545;
+  `;
+  
+  confirmDelete.innerHTML = `
+    <h3 style="color: var(--text-primary); margin-bottom: 15px;">Deletar Lembrete?</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 20px;">Esta ação não pode ser desfeita</p>
+    <div style="display: flex; gap: 10px; justify-content: center;">
+      <button id="btnConfirmDel" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+        🗑️ Deletar
+      </button>
+      <button id="btnCancelDel" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+        Cancelar
+      </button>
+    </div>
+  `;
+  
+  document.body.appendChild(confirmDelete);
+  
+  document.getElementById('btnCancelDel').addEventListener('click', () => {
+    confirmDelete.remove();
+  });
+  
+  document.getElementById('btnConfirmDel').addEventListener('click', async () => {
+    confirmDelete.remove();
+    
+    try {
+      const response = await fetch(`${API_URL}/api/lembretes/${id}`, {
+        method: 'DELETE',
+      });
 
-  try {
-    const response = await fetch(`${API_URL}/api/lembretes/${id}`, {
-      method: 'DELETE',
-    });
-
-    if (response.ok) {
-      carregarLembretesDoDia();
-      mostrarMensagem('sucesso', '✅ Lembrete deletado!');
+      if (response.ok) {
+        carregarLembretesDoDia();
+        mostrarMensagem('sucesso', '✅ Lembrete deletado!');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      mostrarMensagem('erro', '❌ Erro ao deletar');
     }
-  } catch (error) {
-    console.error('Erro:', error);
-    mostrarMensagem('erro', '❌ Erro ao deletar');
-  }
+  });
 }
