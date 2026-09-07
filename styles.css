@@ -160,6 +160,17 @@ body {
   gap: 15px;
 }
  
+.action-btn.btn-gerenciar {
+  background: linear-gradient(135deg, #20c997 0%, #138496 100%);
+  color: white;
+  grid-column: 1 / -1;
+}
+ 
+.action-btn.btn-gerenciar:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(32, 201, 151, 0.4);
+}
+ 
 .action-btn {
   display: flex;
   flex-direction: column;
@@ -686,3 +697,4 @@ body {
     flex-direction: column;
   }
 }
+ 
