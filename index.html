@@ -24,23 +24,23 @@
           <span class="btn-icon">➕</span>
           <span class="btn-text">Adicionar Lembrete</span>
         </button>
-        <button class="action-btn btn-verify" id="btnVerificar" aria-label="Atualizar lembretes do dia">
+        <button class="action-btn btn-verify" id="btnVerificar" aria-label="Verificar lembretes até 2 semanas">
           <span class="btn-icon">📋</span>
           <span class="btn-text">Verificar Lembretes</span>
         </button>
       </div>
-      <button class="action-btn btn-gerenciar" id="btnGerenciar" aria-label="Gerenciar lembretes da semana">
+      <button class="action-btn btn-gerenciar" id="btnGerenciarPrincipal" aria-label="Gerenciar todos os lembretes">
         <span class="btn-icon">⚙️</span>
         <span class="btn-text">Gerenciar Lembretes</span>
       </button>
     </section>
  
     <!-- Modal para Adicionar Lembrete -->
-    <div id="modalAdicionar" class="modal hidden" aria-modal="true" role="dialog">
+    <div id="modalAdicionar" class="modal hidden">
       <div class="modal-content">
         <div class="modal-header">
           <h2>Adicionar Novo Lembrete</h2>
-          <button class="close-btn" id="closeModal" aria-label="Fechar modal">&times;</button>
+          <button class="close-btn" id="closeModal">&times;</button>
         </div>
         <form id="formLembrete" class="form-lembrete">
           <div class="form-group">
@@ -64,16 +64,109 @@
       </div>
     </div>
  
-    <!-- Seção de Lembretes do Dia -->
+    <!-- Modal para Verificar/Gerenciar Lembretes (NOVO) -->
+    <div id="modalVerificar" class="modal-verificar hidden">
+      <div class="modal-verificar-content">
+        <div class="modal-verificar-header">
+          <h2>📋 Gerenciar Lembretes</h2>
+          <button class="close-btn-verificar" id="closeVerificar">&times;</button>
+        </div>
+ 
+        <!-- Filtros -->
+        <div class="filtros-section">
+          <div class="filtro-group">
+            <label>Mostrar:</label>
+            <select id="filtroSemana">
+              <option value="semana">Esta Semana</option>
+              <option value="duas-semanas" selected>Até 2 Semanas</option>
+              <option value="mes">Este Mês</option>
+              <option value="todos">Todos</option>
+            </select>
+          </div>
+ 
+          <div class="filtro-group">
+            <label>Status:</label>
+            <select id="filtroStatus">
+              <option value="todos" selected>Todos</option>
+              <option value="pendentes">Pendentes</option>
+              <option value="enviados">Enviados</option>
+            </select>
+          </div>
+ 
+          <button class="btn-atualizar-modal" id="btnAtualizarModal">🔄 Atualizar</button>
+        </div>
+ 
+        <!-- Container de Lembretes -->
+        <div class="lembretes-verificar-container" id="containerVerificar">
+          <div class="loading">Carregando lembretes...</div>
+        </div>
+ 
+        <!-- Estatísticas -->
+        <div class="modal-verificar-footer">
+          <div class="stats">
+            <span>Total: <strong id="totalStats">0</strong></span>
+            <span>Pendentes: <strong id="pendentesStats">0</strong></span>
+            <span>Enviados: <strong id="enviadosStats">0</strong></span>
+          </div>
+          <button class="btn-fechar-modal" id="btnFecharVerificar">Fechar</button>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Modal de Edição (dentro do modal de verificar) -->
+    <div id="modalEditar" class="modal-editar hidden">
+      <div class="modal-editar-content">
+        <div class="modal-editar-header">
+          <h2>Editar Lembrete</h2>
+          <button class="close-btn" id="closeEditar">&times;</button>
+        </div>
+ 
+        <form id="formEditar" class="form-editar">
+          <div class="form-group">
+            <label for="editarNome">Nome do Contato</label>
+            <input type="text" id="editarNome" placeholder="Digite o nome" maxlength="100">
+          </div>
+ 
+          <div class="form-group">
+            <label for="editarTelefone">Telefone</label>
+            <input type="text" id="editarTelefone" placeholder="Ex: 5537991118750" maxlength="15">
+          </div>
+ 
+          <div class="form-group">
+            <label for="editarData">Data do Lembrete</label>
+            <input type="date" id="editarData">
+          </div>
+ 
+          <div class="form-group">
+            <label for="editarDescricao">Mensagem</label>
+            <textarea id="editarDescricao" placeholder="Descreva o lembrete..." rows="4" maxlength="500"></textarea>
+          </div>
+ 
+          <div class="form-group">
+            <label for="editarEnviado">
+              <input type="checkbox" id="editarEnviado">
+              Marcado como Enviado
+            </label>
+          </div>
+ 
+          <div class="modal-editar-buttons">
+            <button type="submit" class="btn-salvar-editar">✅ Salvar Alterações</button>
+            <button type="button" class="btn-cancelar-editar" id="btnCancelarEditar">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+ 
+    <!-- Seção de Lembretes do Dia (se quiser manter) -->
     <section class="lembretes-section">
       <div class="lembretes-header">
-        <h2>📌 Lembretes do Dia</h2>
+        <h2>🎯 Lembretes de Hoje</h2>
         <span class="lembretes-count" id="countLembretes">0</span>
       </div>
       <div id="containerLembretes" class="lembretes-container">
         <div class="empty-state">
           <p>📭 Nenhum lembrete para hoje</p>
-          <p class="empty-text">Clique em "Adicionar Lembrete" para criar um novo</p>
+          <p class="empty-text">Clique em "Verificar Lembretes" para ver todos</p>
         </div>
       </div>
     </section>
