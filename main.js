@@ -1,5 +1,5 @@
 const API_URL = 'https://lembrete-gabriela.samuelvivi1996.workers.dev';
- 
+
 const MENSAGENS = [
   // Produtividade e Sucesso
   '🌅 Ótimo dia para ser produtivo!',
