@@ -260,28 +260,6 @@ const MENSAGENS = [
   '🔮 O futuro pertence aos sonhadores!',
   '🎪 Circo mágico dos sonhos!',
  
-  // Presente e Mindfulness
-  '🧘 Viva o agora!',
-  '🕉️ Om de presente!',
-  '☮️ Paz no momento!',
-  '🌸 Flor que existe agora é bela!',
-  '🦋 Metamorfose no presente!',
-  '🌊 Onda do agora!',
-  '🍃 Folha que balança agora!',
-  '🌬️ Brisa do momento!',
-  '☀️ Sol brilha agora!',
-  '🌤️ Nuvem passa agora!',
-  '⚡ Energia do presente!',
-  '💫 Momento é tudo!',
-  '✨ Brilhe neste segundo!',
-  '🕯️ Luz agora!',
-  '🔥 Fogo vivo do presente!',
-  '💧 Gota de água agora!',
-  '🪨 Pedra sólida do presente!',
-  '🌳 Árvore enraizada agora!',
-  '🦅 Voo do momento!',
-  '🐠 Nado no agora!',
- 
   // Criatividade e Inovação
   '🎨 Sua criatividade não tem limites!',
   '🖌️ Pinte sua vida em cores vivas!',
