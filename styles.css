@@ -489,3 +489,25 @@ body.dark-mode {
     padding: 20px;
   }
 }
+
+/* Botão copiar */
+.btn-copiar {
+  background: #17a2b8;
+  color: white;
+}
+
+.btn-copiar:hover {
+  background: #138496;
+}
+
+/* Animação de slide in */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
