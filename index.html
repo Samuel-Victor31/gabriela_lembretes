@@ -11,12 +11,12 @@
     <!-- Header com Toggle Dark/Light -->
     <header class="header">
       <div class="header-content">
-        <h1 class="welcome-title">Bem-vindo, Gabriela!</h1>
+        <h1 class="welcome-title">Bem-vindo, Gabriela! 👋</h1>
         <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">🌙</button>
       </div>
       <p class="daily-message" id="dailyMessage"></p>
     </header>
- 
+
     <!-- Seção de Ações -->
     <section class="actions-section">
       <div class="actions-container">
@@ -28,10 +28,13 @@
           <span class="btn-icon">📋</span>
           <span class="btn-text">Verificar Lembretes</span>
         </button>
+        <button class="action-btn btn-consultas" id="btnConsultas" aria-label="Gerenciar consultas">
+          <span class="btn-icon">💊</span>
+          <span class="btn-text">Consultas</span>
+        </button>
       </div>
     </section>
 
-    
     <!-- Modal para Adicionar Lembrete -->
     <div id="modalAdicionar" class="modal hidden">
       <div class="modal-content">
@@ -60,7 +63,7 @@
         </form>
       </div>
     </div>
- 
+
     <!-- Modal para Verificar/Gerenciar Lembretes (NOVO) -->
     <div id="modalVerificar" class="modal-verificar hidden">
       <div class="modal-verificar-content">
@@ -68,7 +71,7 @@
           <h2>📋 Verificar Lembretes</h2>
           <button class="close-btn-verificar" id="closeVerificar">&times;</button>
         </div>
- 
+
         <!-- Filtros -->
         <div class="filtros-section">
           <div class="filtro-group">
@@ -80,7 +83,7 @@
               <option value="todos" selected>Todos</option>
             </select>
           </div>
- 
+
           <div class="filtro-group">
             <label>Status:</label>
             <select id="filtroStatus">
@@ -89,15 +92,15 @@
               <option value="enviados">Enviados</option>
             </select>
           </div>
- 
+
           <button class="btn-atualizar-modal" id="btnAtualizarModal">🔄 Atualizar</button>
         </div>
- 
+
         <!-- Container de Lembretes -->
         <div class="lembretes-verificar-container" id="containerVerificar">
           <div class="loading">Carregando lembretes...</div>
         </div>
- 
+
         <!-- Estatísticas -->
         <div class="modal-verificar-footer">
           <div class="stats">
@@ -109,7 +112,7 @@
         </div>
       </div>
     </div>
- 
+
     <!-- Modal de Edição (dentro do modal de verificar) -->
     <div id="modalEditar" class="modal-editar hidden">
       <div class="modal-editar-content">
@@ -117,35 +120,35 @@
           <h2>Editar Lembrete</h2>
           <button class="close-btn" id="closeEditar">&times;</button>
         </div>
- 
+
         <form id="formEditar" class="form-editar">
           <div class="form-group">
             <label for="editarNome">Nome do Contato</label>
             <input type="text" id="editarNome" placeholder="Digite o nome" maxlength="100">
           </div>
- 
+
           <div class="form-group">
             <label for="editarTelefone">Telefone</label>
             <input type="text" id="editarTelefone" placeholder="Ex: 5537991118750" maxlength="15">
           </div>
- 
+
           <div class="form-group">
             <label for="editarData">Data do Lembrete</label>
             <input type="date" id="editarData">
           </div>
- 
+
           <div class="form-group">
             <label for="editarDescricao">Mensagem</label>
             <textarea id="editarDescricao" placeholder="Descreva o lembrete..." rows="4" maxlength="500"></textarea>
           </div>
- 
+
           <div class="form-group">
             <label for="editarEnviado">
               <input type="checkbox" id="editarEnviado">
               Marcado como Enviado
             </label>
           </div>
- 
+
           <div class="modal-editar-buttons">
             <button type="submit" class="btn-salvar-editar">✅ Salvar Alterações</button>
             <button type="button" class="btn-cancelar-editar" id="btnCancelarEditar">Cancelar</button>
@@ -153,7 +156,163 @@
         </form>
       </div>
     </div>
- 
+
+    <!-- ==================== MODAL CONSULTAS ==================== -->
+    <div id="modalConsultas" class="hidden">
+      <div class="modal-consultas-content">
+        
+        <!-- Header -->
+        <div class="modal-consultas-header">
+          <h2>💊 Gerenciar Consultas</h2>
+          <button class="close-consultas-btn" id="closeConsultas">&times;</button>
+        </div>
+
+        <!-- Abas -->
+        <div class="consultas-tabs">
+          <button class="tab-button active" onclick="document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')); document.getElementById('tabAdicionar').classList.add('active'); document.querySelectorAll('.tab-button').forEach(e => e.classList.remove('active')); this.classList.add('active');">
+            ➕ Adicionar
+          </button>
+          <button class="tab-button" onclick="document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')); document.getElementById('tabListar').classList.add('active'); document.querySelectorAll('.tab-button').forEach(e => e.classList.remove('active')); this.classList.add('active');">
+            📋 Minhas Consultas
+          </button>
+          <button class="tab-button" onclick="document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')); document.getElementById('tabRelatorio').classList.add('active'); document.querySelectorAll('.tab-button').forEach(e => e.classList.remove('active')); this.classList.add('active');">
+            📊 Relatório
+          </button>
+        </div>
+
+        <!-- Aba: Adicionar -->
+        <div id="tabAdicionar" class="tab-content active">
+          <form id="formConsulta">
+            <div class="form-group-consulta">
+              <label for="mesConsulta">Mês *</label>
+              <select id="mesConsulta" required>
+                <option value="">Selecione...</option>
+                <option value="Janeiro">Janeiro</option>
+                <option value="Fevereiro">Fevereiro</option>
+                <option value="Março">Março</option>
+                <option value="Abril">Abril</option>
+                <option value="Maio">Maio</option>
+                <option value="Junho">Junho</option>
+                <option value="Julho">Julho</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Setembro">Setembro</option>
+                <option value="Outubro">Outubro</option>
+                <option value="Novembro">Novembro</option>
+                <option value="Dezembro">Dezembro</option>
+              </select>
+            </div>
+
+            <div class="form-group-consulta">
+              <label for="anoConsulta">Ano *</label>
+              <select id="anoConsulta" required>
+                <option value="">Selecione...</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026" selected>2026</option>
+                <option value="2027">2027</option>
+              </select>
+            </div>
+
+            <div class="form-group-consulta">
+              <label for="nomeConsulta">Nome da Pessoa *</label>
+              <input type="text" id="nomeConsulta" placeholder="Ex: João Silva" required maxlength="100">
+            </div>
+
+            <div class="form-group-consulta">
+              <label for="telefoneConsulta">Telefone</label>
+              <input type="tel" id="telefoneConsulta" placeholder="Ex: 5537991118750" maxlength="15">
+            </div>
+
+            <div class="form-group-consulta">
+              <label for="dataAgendamento">Data de Agendamento *</label>
+              <input type="date" id="dataAgendamento" required>
+            </div>
+
+            <div class="form-group-consulta">
+              <label for="dataConsulta">Data da Consulta *</label>
+              <input type="date" id="dataConsulta" required>
+            </div>
+
+            <div class="form-group-consulta">
+              <label for="formaPagamento">Forma de Pagamento</label>
+              <select id="formaPagamento">
+                <option value="">Selecione...</option>
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Débito">Débito</option>
+                <option value="Crédito">Crédito</option>
+                <option value="PIX">PIX</option>
+                <option value="Cheque">Cheque</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+
+            <div class="form-group-consulta">
+              <label for="valorConsulta">Valor (R$)</label>
+              <input type="number" id="valorConsulta" placeholder="Ex: 150.00" step="0.01" min="0">
+            </div>
+
+            <div class="form-group-consulta">
+              <label for="notasConsulta">Notas</label>
+              <textarea id="notasConsulta" placeholder="Observações adicionais..."></textarea>
+            </div>
+
+            <div class="form-buttons">
+              <button type="submit" class="btn-submit-consulta">✅ Adicionar Consulta</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Aba: Listar -->
+        <div id="tabListar" class="tab-content">
+          <div id="containerConsultas" class="grid-consultas">
+            <div class="empty-state">
+              <p>📭 Carregando consultas...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aba: Relatório -->
+        <div id="tabRelatorio" class="tab-content">
+          <h3>📊 Gerar Relatório</h3>
+          
+          <div class="relatorio-filters">
+            <select id="filtroMesRelatorio">
+              <option value="">Mês (Todos)</option>
+              <option value="Janeiro">Janeiro</option>
+              <option value="Fevereiro">Fevereiro</option>
+              <option value="Março">Março</option>
+              <option value="Abril">Abril</option>
+              <option value="Maio">Maio</option>
+              <option value="Junho">Junho</option>
+              <option value="Julho">Julho</option>
+              <option value="Agosto">Agosto</option>
+              <option value="Setembro">Setembro</option>
+              <option value="Outubro">Outubro</option>
+              <option value="Novembro">Novembro</option>
+              <option value="Dezembro">Dezembro</option>
+            </select>
+
+            <select id="filtroAnoRelatorio">
+              <option value="">Ano (Todos)</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+            </select>
+
+            <button id="btnGerarRelatorio">📊 Gerar Relatório</button>
+          </div>
+
+          <p style="color: #999; margin-top: 20px;">
+            💡 <strong>Dica:</strong> Deixe em branco para gerar relatório de todos os períodos.<br>
+            O relatório será aberto em uma nova janela com opção de impressão.
+          </p>
+        </div>
+
+      </div>
+    </div>
+    <!-- ==================== FIM MODAL CONSULTAS ==================== -->
+
     <!-- Seção de Lembretes do Dia (se quiser manter) -->
     <section class="lembretes-section">
       <div class="lembretes-header">
@@ -168,10 +327,10 @@
       </div>
     </section>
   </div>
- 
+
   <script src="mensagens.js"></script>
   <script src="main.js"></script>
   <script src="scroll-gradient.js"></script>
+  <script src="consultas.js"></script>
 </body>
 </html>
- 
