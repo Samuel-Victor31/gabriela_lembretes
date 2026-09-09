@@ -627,10 +627,10 @@ const CONSULTAS_APP = {
     const conteudo = document.createElement('div');
     conteudo.style.cssText = 'padding: 30px;';
     
-    // Agrupar dados por mês/ano
+    // Agrupar dados por mês de AGENDAMENTO
     const porMes = {};
     dados.dados.forEach(d => {
-      const [ano, mes] = d.data_consulta.split('-');
+      const [ano, mes] = d.data_agendamento.split('-');
       const chave = ano + '-' + mes;
       if (!porMes[chave]) {
         porMes[chave] = {
@@ -773,10 +773,10 @@ const CONSULTAS_APP = {
         doc.setTextColor(100, 100, 100);
         doc.text('Gerado em: ' + new Date().toLocaleString('pt-BR'), 15, yPos);
         
-        // Agrupar dados por mês
+        // Agrupar dados por mês de AGENDAMENTO
         const porMes = {};
         dados.dados.forEach(d => {
-          const [ano, mes] = d.data_consulta.split('-');
+          const [ano, mes] = d.data_agendamento.split('-');
           const chave = ano + '-' + mes;
           if (!porMes[chave]) {
             porMes[chave] = {
