@@ -781,3 +781,4 @@ const CONSULTAS_APP = {
 document.addEventListener('DOMContentLoaded', () => {
   CONSULTAS_APP.init();
 });
+
