@@ -35,6 +35,31 @@ const CONSULTAS_APP = {
   abrirModal() {
     this.modalConsultas.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    
+    // Pré-preencher data e mês
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    
+    // Pré-preencher mês
+    const mesInput = document.getElementById('mesConsulta');
+    if (mesInput) {
+      mesInput.value = mes;
+    }
+    
+    // Pré-preencher ano
+    const anoInput = document.getElementById('anoConsulta');
+    if (anoInput) {
+      anoInput.value = ano;
+    }
+    
+    // Pré-preencher data de agendamento com hoje
+    const dataAgInput = document.getElementById('dataAgendamento');
+    if (dataAgInput) {
+      dataAgInput.value = ano + '-' + mes + '-' + dia;
+    }
+    
     this.carregarConsultas();
   },
 
@@ -256,58 +281,189 @@ const CONSULTAS_APP = {
       const dados = await response.json();
 
       if (response.ok) {
-        this.abrirRelatorio(dados);
+        this.gerarPDF(dados);
       }
     } catch (error) {
       this.mostrarMensagem('erro', 'Erro ao gerar relatório');
     }
   },
 
-  abrirRelatorio(dados) {
-    const rows = dados.dados.map(d => 
-      '<tr><td>#' + d.numero + '</td>' +
-      '<td>' + d.nome + '</td>' +
-      '<td>' + (d.telefone || '-') + '</td>' +
-      '<td>' + d.data_agendamento + '</td>' +
-      '<td>' + d.data_consulta + '</td>' +
-      '<td>' + (d.forma_pagamento || '-') + '</td>' +
-      '<td>R$ ' + (d.valor ? d.valor.toFixed(2) : '0.00') + '</td></tr>'
-    ).join('');
+  gerarPDF(dados) {
+    // Criar HTML para o PDF
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Relatório de Consultas</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            padding: 20px;
+            color: #333;
+            background: #fff;
+          }
+          .container { max-width: 1000px; margin: 0 auto; }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+          }
+          .header h1 { 
+            color: #667eea; 
+            font-size: 24px;
+            margin-bottom: 5px;
+          }
+          .header p { color: #999; font-size: 14px; }
+          .info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+          }
+          .info-item {
+            padding: 15px;
+            background: #f5f7fa;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+          }
+          .info-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 12px;
+            margin-bottom: 5px;
+          }
+          .info-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+          }
+          table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            background: white;
+            margin-top: 20px;
+          }
+          thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+          }
+          th { 
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+          }
+          td { 
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+          }
+          tbody tr:hover {
+            background: #f9f9f9;
+          }
+          tbody tr:nth-child(even) {
+            background: #fafbfc;
+          }
+          .numero { font-weight: 700; color: #667eea; }
+          .valor { font-weight: 600; color: #28a745; }
+          .footer {
+            margin-top: 30px;
+            text-align: right;
+            color: #999;
+            font-size: 12px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>📊 Relatório de Consultas</h1>
+            <p>Sistema de Lembretes - Gabriela</p>
+          </div>
 
-    const html = '<!DOCTYPE html>' +
-      '<html><head><meta charset="UTF-8"><title>Relatorio</title>' +
-      '<style>' +
-      'body { font-family: Arial; margin: 30px; background: #fff; }' +
-      '.header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #667eea; padding-bottom: 20px; }' +
-      '.header h1 { color: #667eea; margin: 0; }' +
-      '.info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }' +
-      '.info-item { padding: 15px; background: #f5f7fa; border-left: 4px solid #667eea; border-radius: 4px; }' +
-      '.info-label { font-weight: 600; color: #667eea; font-size: 0.9em; margin-bottom: 5px; }' +
-      '.info-value { font-size: 1.1em; color: #333; }' +
-      'table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }' +
-      'thead { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }' +
-      'th { padding: 15px; text-align: left; font-weight: 600; }' +
-      'td { padding: 12px 15px; border-bottom: 1px solid #e0e0e0; }' +
-      'tbody tr:hover { background: #f9f9f9; }' +
-      'tbody tr:nth-child(even) { background: #fafbfc; }' +
-      '.footer { margin-top: 30px; text-align: right; color: #999; font-size: 0.9em; }' +
-      '</style>' +
-      '</head><body>' +
-      '<div class="header"><h1>Relatorio de Consultas</h1></div>' +
-      '<div class="info">' +
-      '<div class="info-item"><div class="info-label">Periodo</div><div class="info-value">' + dados.mes + '/' + dados.ano + '</div></div>' +
-      '<div class="info-item"><div class="info-label">Total</div><div class="info-value">' + dados.total_consultas + ' consulta(s)</div></div>' +
-      '<div class="info-item"><div class="info-label">Gerado em</div><div class="info-value">' + new Date().toLocaleString() + '</div></div>' +
-      '</div>' +
-      '<table><thead><tr><th>#</th><th>Nome</th><th>Telefone</th><th>Agendamento</th><th>Consulta</th><th>Pagamento</th><th>Valor</th></tr></thead>' +
-      '<tbody>' + rows + '</tbody></table>' +
-      '<div class="footer"><p>Relatorio impresso</p></div>' +
-      '<script>setTimeout(() => window.print(), 500);</script>' +
-      '</body></html>';
+          <div class="info">
+            <div class="info-item">
+              <div class="info-label">PERÍODO</div>
+              <div class="info-value">${dados.mes}/${dados.ano}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">TOTAL DE CONSULTAS</div>
+              <div class="info-value">${dados.total_consultas}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">GERADO EM</div>
+              <div class="info-value">${new Date().toLocaleDateString('pt-BR')}</div>
+            </div>
+          </div>
 
-    const janela = window.open();
-    janela.document.write(html);
-    janela.document.close();
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Agendamento</th>
+                <th>Consulta</th>
+                <th>Pagamento</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${dados.dados.map(d => `
+                <tr>
+                  <td class="numero">#${d.numero}</td>
+                  <td>${d.nome}</td>
+                  <td>${d.telefone || '-'}</td>
+                  <td>${d.data_agendamento}</td>
+                  <td><strong>${d.data_consulta}</strong></td>
+                  <td>${d.forma_pagamento || '-'}</td>
+                  <td class="valor">R$ ${d.valor ? d.valor.toFixed(2) : '0.00'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="footer">
+            <p>Relatório gerado em ${new Date().toLocaleString('pt-BR')}</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Converter HTML para PDF usando html2pdf
+    const element = document.createElement('div');
+    element.innerHTML = html;
+    
+    // Usar html2pdf.js (alternativa simples)
+    const opt = {
+      margin: 10,
+      filename: 'relatorio-consultas-' + new Date().getTime() + '.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a4' }
+    };
+
+    // Carregar html2pdf dinamicamente
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+    script.onload = () => {
+      html2pdf().set(opt).from(html).save();
+      this.mostrarMensagem('sucesso', 'PDF baixado com sucesso!');
+    };
+    script.onerror = () => {
+      // Fallback: abrir em nova janela
+      const janela = window.open();
+      janela.document.write(html);
+      janela.document.close();
+      this.mostrarMensagem('sucesso', 'Relatório aberto!');
+    };
+    document.head.appendChild(script);
   },
 
   mostrarMensagem(tipo, texto) {
