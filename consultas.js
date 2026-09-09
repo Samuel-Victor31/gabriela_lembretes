@@ -195,8 +195,18 @@ const CONSULTAS_APP = {
       porMes[chave].consultas.push(c);
     });
 
-    // Ordenar por ano/mês decrescente
-    const chaves = Object.keys(porMes).sort().reverse();
+    // Ordenar por ano/mês crescente (Setembro → Outubro → Novembro)
+    const chaves = Object.keys(porMes).sort((a, b) => {
+      // Formato: "2026-09", "2026-10", "2026-11"
+      const [anoA, mesA] = a.split('-');
+      const [anoB, mesB] = b.split('-');
+      
+      // Comparar por ano primeiro, depois por mês numericamente
+      if (anoA !== anoB) {
+        return parseInt(anoA) - parseInt(anoB);
+      }
+      return parseInt(mesA) - parseInt(mesB);
+    });
     
     if (chaves.length === 0) {
       container.innerHTML = '<div class="empty-state"><p>Nenhuma consulta registrada</p></div>';
