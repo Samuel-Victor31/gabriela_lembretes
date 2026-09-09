@@ -1,48 +1,48 @@
 const CONSULTAS_APP = {
   API_URL: 'https://lembrete-gabriela.samuelvivi1996.workers.dev',
   consultas: [],
- 
+
   init() {
     this.btnConsultas = document.getElementById('btnConsultas');
     this.modalConsultas = document.getElementById('modalConsultas');
     
     if (!this.btnConsultas || !this.modalConsultas) return;
- 
+
     this.adicionarEventos();
     this.carregarConsultas();
   },
- 
+
   adicionarEventos() {
     this.btnConsultas.addEventListener('click', () => this.abrirModal());
     
     const closeBtn = document.getElementById('closeConsultas');
     if (closeBtn) closeBtn.addEventListener('click', () => this.fecharModal());
- 
+
     this.modalConsultas.addEventListener('click', (e) => {
       if (e.target === this.modalConsultas) this.fecharModal();
     });
- 
+
     const form = document.getElementById('formConsulta');
     if (form) form.addEventListener('submit', (e) => this.adicionarConsulta(e));
- 
+
     const btnRelatorio = document.getElementById('btnGerarRelatorio');
     if (btnRelatorio) btnRelatorio.addEventListener('click', () => this.gerarRelatorio());
   },
- 
+
   abrirModal() {
     this.modalConsultas.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     this.carregarConsultas();
   },
- 
+
   fecharModal() {
     this.modalConsultas.classList.add('hidden');
     document.body.style.overflow = 'auto';
   },
- 
+
   async adicionarConsulta(e) {
     e.preventDefault();
- 
+
     const dados = {
       mes: document.getElementById('mesConsulta').value,
       ano: parseInt(document.getElementById('anoConsulta').value),
@@ -54,21 +54,21 @@ const CONSULTAS_APP = {
       valor: parseFloat(document.getElementById('valorConsulta').value) || null,
       notas: document.getElementById('notasConsulta').value.trim() || null
     };
- 
+
     if (!dados.nome) {
       alert('Nome é obrigatório!');
       return;
     }
- 
+
     try {
       const response = await fetch(this.API_URL + '/api/consultas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
       });
- 
+
       const resultado = await response.json();
- 
+
       if (response.ok) {
         this.mostrarMensagem('sucesso', 'Consulta adicionada com sucesso!');
         document.getElementById('formConsulta').reset();
@@ -80,7 +80,7 @@ const CONSULTAS_APP = {
       this.mostrarMensagem('erro', 'Erro de conexão');
     }
   },
- 
+
   async carregarConsultas() {
     try {
       const response = await fetch(this.API_URL + '/api/consultas');
@@ -90,50 +90,50 @@ const CONSULTAS_APP = {
       // silencioso
     }
   },
- 
+
   renderizarConsultas() {
     const container = document.getElementById('containerConsultas');
     if (!container) return;
- 
+
     if (this.consultas.length === 0) {
       container.innerHTML = '<div class="empty-state"><p>Nenhuma consulta registrada</p></div>';
       return;
     }
- 
+
     const porMes = {};
     this.consultas.forEach(c => {
       const chave = c.ano + '-' + c.mes;
       if (!porMes[chave]) porMes[chave] = [];
       porMes[chave].push(c);
     });
- 
+
     container.innerHTML = '';
     
     Object.keys(porMes).sort().reverse().forEach(chave => {
       const [ano, mes] = chave.split('-');
       const consultas = porMes[chave];
- 
+
       const secao = document.createElement('div');
       secao.className = 'secao-mes-lista';
- 
+
       const titulo = document.createElement('h3');
       titulo.className = 'titulo-mes-lista';
       titulo.textContent = mes + '/' + ano + ' (' + consultas.length + ')';
       secao.appendChild(titulo);
- 
+
       const tabela = document.createElement('table');
       tabela.className = 'tabela-consultas';
       
       const thead = document.createElement('thead');
       thead.innerHTML = '<tr><th>#</th><th>Nome</th><th>Telefone</th><th>Agendamento</th><th>Consulta</th><th>Pagamento</th><th>Valor</th><th>Notas</th><th>Acao</th></tr>';
       tabela.appendChild(thead);
- 
+
       const tbody = document.createElement('tbody');
       
       consultas.forEach(c => {
         const [anoAg, mesAg, diaAg] = c.data_agendamento.split('-');
         const [anoC, mesC, diaC] = c.data_consulta.split('-');
- 
+
         const row = document.createElement('tr');
         row.innerHTML = '<td class="numero-col">#' + c.numero_pessoa + '</td>' +
           '<td class="nome-col">' + c.nome + '</td>' +
@@ -153,10 +153,10 @@ const CONSULTAS_APP = {
       container.appendChild(secao);
     });
   },
- 
+
   async deletarConsulta(id) {
     if (!confirm('Deletar consulta?')) return;
- 
+
     try {
       await fetch(this.API_URL + '/api/consultas/' + id, { method: 'DELETE' });
       this.mostrarMensagem('sucesso', 'Deletado!');
@@ -165,19 +165,19 @@ const CONSULTAS_APP = {
       this.mostrarMensagem('erro', 'Erro');
     }
   },
- 
+
   async gerarRelatorio() {
     const mes = document.getElementById('filtroMesRelatorio') ? document.getElementById('filtroMesRelatorio').value : '';
     const ano = document.getElementById('filtroAnoRelatorio') ? document.getElementById('filtroAnoRelatorio').value : '';
- 
+
     try {
       let url = this.API_URL + '/api/relatorios/gerar';
       if (mes) url += '?mes=' + mes;
       if (ano) url += (mes ? '&' : '?') + 'ano=' + ano;
- 
+
       const response = await fetch(url);
       const dados = await response.json();
- 
+
       if (response.ok) {
         this.abrirRelatorio(dados);
       }
@@ -185,7 +185,7 @@ const CONSULTAS_APP = {
       this.mostrarMensagem('erro', 'Erro');
     }
   },
- 
+
   abrirRelatorio(dados) {
     const rows = dados.dados.map(d => 
       '<tr><td>#' + d.numero + '</td>' +
@@ -196,7 +196,7 @@ const CONSULTAS_APP = {
       '<td>' + (d.forma_pagamento || '-') + '</td>' +
       '<td>R$ ' + (d.valor ? d.valor.toFixed(2) : '0.00') + '</td></tr>'
     ).join('');
- 
+
     const html = '<!DOCTYPE html>' +
       '<html><head><meta charset="UTF-8"><title>Relatorio</title>' +
       '<style>' +
@@ -227,12 +227,12 @@ const CONSULTAS_APP = {
       '<div class="footer"><p>Relatorio impresso</p></div>' +
       '<script>setTimeout(() => window.print(), 500);</script>' +
       '</body></html>';
- 
+
     const janela = window.open();
     janela.document.write(html);
     janela.document.close();
   },
- 
+
   mostrarMensagem(tipo, texto) {
     const div = document.createElement('div');
     div.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 15px 25px; background: ' + 
@@ -242,8 +242,7 @@ const CONSULTAS_APP = {
     setTimeout(() => div.remove(), 3000);
   }
 };
- 
+
 document.addEventListener('DOMContentLoaded', () => {
   CONSULTAS_APP.init();
 });
- 
