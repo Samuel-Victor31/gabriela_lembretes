@@ -144,15 +144,24 @@ const CONSULTAS_APP = {
       return;
     }
 
-    // Criar um mapa para agrupar por mês/ano
-    const porMes = {};
+    // Limpar container
+    container.innerHTML = '';
     
+    // Criar tabela única com todas as consultas
+    const tabela = document.createElement('table');
+    tabela.className = 'tabela-consultas-unificada';
+    
+    const thead = document.createElement('thead');
+    thead.innerHTML = '<tr><th class="mes-col-header">Mês</th><th>#</th><th>Nome</th><th>Telefone</th><th>Agendamento</th><th>Consulta</th><th>Pagamento</th><th>Valor</th><th>Notas</th><th>Acao</th></tr>';
+    tabela.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    
+    // Agrupar por mês para renderizar
+    const porMes = {};
     this.consultas.forEach(c => {
       if (!c.ano || !c.mes) return;
-      
-      // Criar chave única: YYYY-MM
-      const chave = c.ano.toString().padStart(4, '0') + '-' + c.mes.toString().padStart(2, '0');
-      
+      const chave = c.ano + '-' + c.mes;
       if (!porMes[chave]) {
         porMes[chave] = {
           ano: c.ano,
@@ -160,46 +169,17 @@ const CONSULTAS_APP = {
           consultas: []
         };
       }
-      
       porMes[chave].consultas.push(c);
     });
 
-    // Limpar container
-    container.innerHTML = '';
-    
     // Ordenar por ano/mês decrescente
     const chaves = Object.keys(porMes).sort().reverse();
     
-    chaves.forEach((chave, index) => {
+    chaves.forEach((chave, indexMes) => {
       const grupo = porMes[chave];
-      const consultas = grupo.consultas;
       const mesStr = grupo.mes + '/' + grupo.ano;
-
-      // Criar seção accordion
-      const secao = document.createElement('div');
-      secao.className = 'secao-mes-accordion';
-
-      // Título clicável (aba)
-      const titulo = document.createElement('div');
-      titulo.className = 'aba-mes';
-      titulo.style.cssText = 'cursor: pointer; user-select: none; padding: 15px; background: #667eea; color: white; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; font-weight: 600; margin-bottom: 15px;';
-      titulo.innerHTML = '<span>' + mesStr + ' (' + consultas.length + ')</span><span class="icone-aba">▼</span>';
       
-      // Conteúdo da tabela (inicialmente oculto, exceto o primeiro)
-      const conteudo = document.createElement('div');
-      conteudo.className = 'conteudo-mes-accordion';
-      conteudo.style.cssText = 'display: ' + (index === 0 ? 'block' : 'none') + '; overflow: hidden; overflow-x: auto;';
-
-      const tabela = document.createElement('table');
-      tabela.className = 'tabela-consultas';
-      
-      const thead = document.createElement('thead');
-      thead.innerHTML = '<tr><th>#</th><th>Nome</th><th>Telefone</th><th>Agendamento</th><th>Consulta</th><th>Pagamento</th><th>Valor</th><th>Notas</th><th>Acao</th></tr>';
-      tabela.appendChild(thead);
-
-      const tbody = document.createElement('tbody');
-      
-      consultas.forEach(c => {
+      grupo.consultas.forEach((c, indexConsulta) => {
         // Formatar datas com segurança
         let dataAg = '-';
         let dataC = '-';
@@ -227,7 +207,16 @@ const CONSULTAS_APP = {
         }
 
         const row = document.createElement('tr');
-        row.innerHTML = '<td class="numero-col"><strong>#' + c.numero_pessoa + '</strong></td>' +
+        row.className = 'linha-consulta-unificada';
+        row.setAttribute('data-mes', chave);
+        
+        // Mostrar mês apenas na primeira linha de cada mês com botão de expandir/colapsar
+        const mesCellContent = indexConsulta === 0 
+          ? '<strong style="cursor: pointer; user-select: none;" onclick="CONSULTAS_APP.toggleMes(\'' + chave + '\')">' + mesStr + ' <span class="toggle-mes">▼</span></strong>'
+          : '';
+        
+        row.innerHTML = '<td class="mes-col">' + mesCellContent + '</td>' +
+          '<td class="numero-col"><strong>#' + c.numero_pessoa + '</strong></td>' +
           '<td class="nome-col">' + (c.nome || '-') + '</td>' +
           '<td class="tel-col">' + (c.telefone || '-') + '</td>' +
           '<td class="data-col">' + dataAg + '</td>' +
@@ -239,47 +228,31 @@ const CONSULTAS_APP = {
         
         tbody.appendChild(row);
       });
-      
-      tabela.appendChild(tbody);
-      conteudo.appendChild(tabela);
-
-      // Event listener para abrir/fechar aba
-      titulo.addEventListener('click', () => {
-        // Fechar todas as outras abas
-        const todasAbas = document.querySelectorAll('.conteudo-mes-accordion');
-        const todosIcones = document.querySelectorAll('.icone-aba');
-        
-        todasAbas.forEach(aba => {
-          if (aba !== conteudo) {
-            aba.style.display = 'none';
-          }
-        });
-        
-        todosIcones.forEach(icone => {
-          if (icone !== titulo.querySelector('.icone-aba')) {
-            icone.style.transform = 'rotate(0deg)';
-          }
-        });
-
-        // Abrir/fechar a aba clicada
-        if (conteudo.style.display === 'none') {
-          conteudo.style.display = 'block';
-          titulo.querySelector('.icone-aba').style.transform = 'rotate(180deg)';
-        } else {
-          conteudo.style.display = 'none';
-          titulo.querySelector('.icone-aba').style.transform = 'rotate(0deg)';
-        }
-      });
-
-      // Setar rotação inicial para primeira aba
-      if (index === 0) {
-        titulo.querySelector('.icone-aba').style.transform = 'rotate(180deg)';
-      }
-
-      secao.appendChild(titulo);
-      secao.appendChild(conteudo);
-      container.appendChild(secao);
     });
+    
+    tabela.appendChild(tbody);
+    container.appendChild(tabela);
+  },
+
+  toggleMes(chave) {
+    const linhas = document.querySelectorAll('[data-mes="' + chave + '"]');
+    linhas.forEach(linha => {
+      if (linha.style.display === 'none') {
+        linha.style.display = '';
+      } else {
+        linha.style.display = 'none';
+      }
+    });
+    
+    // Girar ícone na primeira linha
+    const primeiraLinha = linhas[0];
+    if (primeiraLinha) {
+      const spanToggle = primeiraLinha.querySelector('.toggle-mes');
+      if (spanToggle) {
+        const textoAtual = spanToggle.textContent;
+        spanToggle.textContent = textoAtual === '▼' ? '▶' : '▼';
+      }
+    }
   },
 
   async deletarConsulta(id, ano, mes) {
