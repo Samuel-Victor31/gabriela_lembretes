@@ -2280,3 +2280,174 @@ body {
     justify-content: flex-start;
   }
 }
+
+/* ==================== ESTILO LISTA DE CONSULTAS ==================== */
+
+.secao-mes-lista {
+  margin-bottom: 30px;
+  padding: 0;
+}
+
+.titulo-mes-lista {
+  color: #667eea;
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  padding: 15px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  font-weight: 600;
+}
+
+.tabela-consultas {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.tabela-consultas thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.tabela-consultas th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95em;
+  white-space: nowrap;
+}
+
+.tabela-consultas td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.95em;
+}
+
+.tabela-consultas tbody tr {
+  transition: background 0.2s ease;
+}
+
+.tabela-consultas tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.tabela-consultas tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.numero-col {
+  font-weight: 700;
+  color: #667eea;
+  min-width: 50px;
+}
+
+.nome-col {
+  font-weight: 600;
+  color: #333;
+  min-width: 150px;
+}
+
+.tel-col {
+  min-width: 130px;
+  font-family: monospace;
+}
+
+.data-col {
+  min-width: 110px;
+  text-align: center;
+}
+
+.pagamento-col {
+  min-width: 100px;
+}
+
+.valor-col {
+  font-weight: 600;
+  color: #28a745;
+  min-width: 100px;
+  text-align: right;
+}
+
+.notas-col {
+  color: #666;
+  font-size: 0.9em;
+  max-width: 200px;
+  word-break: break-word;
+}
+
+.acao-col {
+  text-align: center;
+  min-width: 60px;
+}
+
+.btn-del {
+  background: #ffebee;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-del:hover {
+  background: #ffcdd2;
+  transform: scale(1.1);
+}
+
+/* Responsividade para tabela */
+@media (max-width: 1024px) {
+  .tabela-consultas {
+    font-size: 0.9em;
+  }
+
+  .tabela-consultas th,
+  .tabela-consultas td {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabela-consultas {
+    font-size: 0.85em;
+  }
+
+  .tabela-consultas thead {
+    display: none;
+  }
+
+  .tabela-consultas tbody,
+  .tabela-consultas tr,
+  .tabela-consultas td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabela-consultas tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .tabela-consultas td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+    border: none;
+    padding: 12px;
+  }
+
+  .tabela-consultas td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 12px;
+    font-weight: 600;
+    color: #667eea;
+  }
+}
