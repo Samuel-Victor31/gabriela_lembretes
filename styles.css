@@ -2693,3 +2693,91 @@ body {
   display: inline-flex !important;
   align-items: center !important;
 }
+
+/* Dark Mode para Modal Consultas */
+#modalConsultas.dark-mode {
+  background: rgba(26, 26, 46, 0.95) !important;
+}
+
+#modalConsultas.dark-mode .modal-consultas-content {
+  background: #16213e !important;
+  color: #ffffff !important;
+}
+
+#modalConsultas.dark-mode .modal-consultas-header {
+  border-bottom-color: #2d3561 !important;
+  color: #ffffff !important;
+}
+
+#modalConsultas.dark-mode .modal-consultas-header h2 {
+  color: #667eea !important;
+}
+
+#modalConsultas.dark-mode input,
+#modalConsultas.dark-mode select,
+#modalConsultas.dark-mode textarea {
+  background: #0f0f1e !important;
+  color: #ffffff !important;
+  border-color: #2d3561 !important;
+}
+
+#modalConsultas.dark-mode input::placeholder,
+#modalConsultas.dark-mode textarea::placeholder {
+  color: #b0b0b0 !important;
+}
+
+#modalConsultas.dark-mode label {
+  color: #ffffff !important;
+}
+
+#modalConsultas.dark-mode .abas-container {
+  border-bottom-color: #2d3561 !important;
+}
+
+#modalConsultas.dark-mode .aba-mes-top {
+  background: #0f0f1e !important;
+  border-color: #2d3561 !important;
+  color: #667eea !important;
+}
+
+#modalConsultas.dark-mode .aba-mes-top:hover {
+  background: #16213e !important;
+  border-color: #667eea !important;
+}
+
+#modalConsultas.dark-mode .aba-mes-top.aba-ativa {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+}
+
+#modalConsultas.dark-mode .tabela-consultas-com-abas {
+  background: #0f0f1e !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+#modalConsultas.dark-mode .tabela-consultas-com-abas thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+#modalConsultas.dark-mode .tabela-consultas-com-abas th {
+  color: #ffffff !important;
+  border-color: #2d3561 !important;
+}
+
+#modalConsultas.dark-mode .tabela-consultas-com-abas td {
+  color: #ffffff !important;
+  border-color: #2d3561 !important;
+}
+
+#modalConsultas.dark-mode .tabela-consultas-com-abas tbody tr:hover {
+  background: #16213e !important;
+}
+
+#modalConsultas.dark-mode .tabela-consultas-com-abas tbody tr:nth-child(even) {
+  background: #1a1a2e !important;
+}
+
+#modalConsultas.dark-mode .empty-state {
+  background: #0f0f1e !important;
+  color: #b0b0b0 !important;
+}
