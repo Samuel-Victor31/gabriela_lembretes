@@ -217,7 +217,7 @@ const CONSULTAS_APP = {
           '<td class="pagamento-col">' + (c.forma_pagamento || '-') + '</td>' +
           '<td class="valor-col">' + (c.valor ? 'R$ ' + c.valor.toFixed(2) : '-') + '</td>' +
           '<td class="notas-col">' + (c.notas || '-') + '</td>' +
-          '<td class="acao-col"><button class="btn-del" onclick="CONSULTAS_APP.deletarConsulta(' + c.id + ')">X</button></td>';
+          '<td class="acao-col"><button class="btn-editar" onclick="CONSULTAS_APP.abrirEditarConsulta(' + c.id + ')">✏️</button> <button class="btn-del" onclick="CONSULTAS_APP.deletarConsulta(' + c.id + ', ' + c.ano + ', \'' + c.mes + '\')">X</button></td>';
         
         tbody.appendChild(row);
       });
@@ -228,7 +228,7 @@ const CONSULTAS_APP = {
     });
   },
 
-  async deletarConsulta(id) {
+  async deletarConsulta(id, ano, mes) {
     const confirmDelete = document.createElement('div');
     confirmDelete.className = 'modal-confirmacao';
     confirmDelete.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 3000;';
@@ -276,13 +276,193 @@ const CONSULTAS_APP = {
       confirmDelete.remove();
 
       try {
+        // Deletar consulta
         await fetch(this.API_URL + '/api/consultas/' + id, { method: 'DELETE' });
-        this.mostrarMensagem('sucesso', 'Consultoria deletada!');
+        
+        // Reorganizar números do mesmo mês/ano
+        await this.reorganizarNumeros(ano, mes);
+        
+        this.mostrarMensagem('sucesso', 'Consultoria deletada e números atualizados!');
         this.carregarConsultas();
       } catch (error) {
         this.mostrarMensagem('erro', 'Erro ao deletar');
       }
     });
+  },
+
+  async reorganizarNumeros(ano, mes) {
+    try {
+      // Buscar todas as consultas do mês/ano
+      const response = await fetch(this.API_URL + '/api/consultas');
+      const todasConsultas = await response.json();
+      
+      // Filtrar apenas as do mês/ano
+      const consultasMes = todasConsultas
+        .filter(c => c.ano == ano && c.mes == mes)
+        .sort((a, b) => a.id - b.id); // Ordenar por ID
+      
+      // Reorganizar números
+      for (let i = 0; i < consultasMes.length; i++) {
+        const novoNumero = i + 1;
+        if (consultasMes[i].numero_pessoa !== novoNumero) {
+          await fetch(this.API_URL + '/api/consultas/' + consultasMes[i].id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ numero_pessoa: novoNumero })
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao reorganizar números:', error);
+    }
+  },
+
+  async abrirEditarConsulta(id) {
+    // Buscar consulta
+    try {
+      const response = await fetch(this.API_URL + '/api/consultas');
+      const consultas = await response.json();
+      const consulta = consultas.find(c => c.id === id);
+      
+      if (!consulta) {
+        this.mostrarMensagem('erro', 'Consulta não encontrada');
+        return;
+      }
+
+      // Criar modal de edição
+      this.mostrarModalEditar(consulta);
+    } catch (error) {
+      this.mostrarMensagem('erro', 'Erro ao carregar consulta');
+    }
+  },
+
+  mostrarModalEditar(consulta) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-editar-consulta';
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 3000; overflow: auto;';
+
+    const container = document.createElement('div');
+    container.style.cssText = 'background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);';
+
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Editar Consulta #' + consulta.numero_pessoa;
+    titulo.style.cssText = 'color: #667eea; margin: 0 0 20px 0;';
+    container.appendChild(titulo);
+
+    // Formulário
+    const form = document.createElement('form');
+    form.style.cssText = 'display: grid; gap: 15px;';
+
+    // Nome
+    form.innerHTML += '<div>' +
+      '<label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Nome</label>' +
+      '<input type="text" id="editNome" value="' + (consulta.nome || '') + '" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: Arial;">' +
+      '</div>';
+
+    // Telefone
+    form.innerHTML += '<div>' +
+      '<label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Telefone</label>' +
+      '<input type="text" id="editTelefone" value="' + (consulta.telefone || '') + '" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: Arial;">' +
+      '</div>';
+
+    // Data Agendamento
+    form.innerHTML += '<div>' +
+      '<label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Data de Agendamento</label>' +
+      '<input type="date" id="editDataAg" value="' + (consulta.data_agendamento || '') + '" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: Arial;">' +
+      '</div>';
+
+    // Data Consulta
+    form.innerHTML += '<div>' +
+      '<label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Data da Consulta</label>' +
+      '<input type="date" id="editDataConsulta" value="' + (consulta.data_consulta || '') + '" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: Arial;">' +
+      '</div>';
+
+    // Forma de Pagamento
+    form.innerHTML += '<div>' +
+      '<label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Forma de Pagamento</label>' +
+      '<select id="editFormaPagamento" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: Arial;">' +
+      '<option value="">Selecione...</option>' +
+      '<option value="Dinheiro" ' + (consulta.forma_pagamento === 'Dinheiro' ? 'selected' : '') + '>Dinheiro</option>' +
+      '<option value="Débito" ' + (consulta.forma_pagamento === 'Débito' ? 'selected' : '') + '>Débito</option>' +
+      '<option value="Crédito" ' + (consulta.forma_pagamento === 'Crédito' ? 'selected' : '') + '>Crédito</option>' +
+      '<option value="PIX" ' + (consulta.forma_pagamento === 'PIX' ? 'selected' : '') + '>PIX</option>' +
+      '<option value="Cheque" ' + (consulta.forma_pagamento === 'Cheque' ? 'selected' : '') + '>Cheque</option>' +
+      '<option value="Outro" ' + (consulta.forma_pagamento === 'Outro' ? 'selected' : '') + '>Outro</option>' +
+      '</select>' +
+      '</div>';
+
+    // Valor
+    form.innerHTML += '<div>' +
+      '<label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Valor (R$)</label>' +
+      '<input type="number" id="editValor" value="' + (consulta.valor || '') + '" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: Arial;">' +
+      '</div>';
+
+    // Notas
+    form.innerHTML += '<div>' +
+      '<label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Notas</label>' +
+      '<textarea id="editNotas" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: Arial; min-height: 80px;">' + (consulta.notas || '') + '</textarea>' +
+      '</div>';
+
+    container.appendChild(form);
+
+    // Botões
+    const botoes = document.createElement('div');
+    botoes.style.cssText = 'display: flex; gap: 10px; margin-top: 20px;';
+
+    const btnCancelar = document.createElement('button');
+    btnCancelar.textContent = 'Cancelar';
+    btnCancelar.style.cssText = 'flex: 1; background: #6c757d; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600;';
+    btnCancelar.onclick = () => modal.remove();
+
+    const btnSalvar = document.createElement('button');
+    btnSalvar.textContent = '💾 Salvar';
+    btnSalvar.style.cssText = 'flex: 1; background: #667eea; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600;';
+    btnSalvar.onclick = (e) => {
+      e.preventDefault();
+      this.salvarEdicaoConsulta(consulta.id, modal);
+    };
+
+    botoes.appendChild(btnCancelar);
+    botoes.appendChild(btnSalvar);
+    container.appendChild(botoes);
+
+    modal.appendChild(container);
+    document.body.appendChild(modal);
+  },
+
+  async salvarEdicaoConsulta(id, modal) {
+    const dados = {
+      nome: document.getElementById('editNome').value.trim(),
+      telefone: document.getElementById('editTelefone').value.trim() || null,
+      data_agendamento: document.getElementById('editDataAg').value,
+      data_consulta: document.getElementById('editDataConsulta').value,
+      forma_pagamento: document.getElementById('editFormaPagamento').value || null,
+      valor: parseFloat(document.getElementById('editValor').value) || null,
+      notas: document.getElementById('editNotas').value.trim() || null
+    };
+
+    if (!dados.nome) {
+      alert('Nome é obrigatório!');
+      return;
+    }
+
+    try {
+      const response = await fetch(this.API_URL + '/api/consultas/' + id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      });
+
+      if (response.ok) {
+        modal.remove();
+        this.mostrarMensagem('sucesso', 'Consulta atualizada!');
+        this.carregarConsultas();
+      } else {
+        this.mostrarMensagem('erro', 'Erro ao salvar');
+      }
+    } catch (error) {
+      this.mostrarMensagem('erro', 'Erro de conexão');
+    }
   },
 
   async gerarRelatorio() {
