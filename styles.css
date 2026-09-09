@@ -2593,8 +2593,10 @@ body {
   flex-direction: row;
   gap: 10px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
   width: 100%;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 10px;
 }
 
 .aba-mes-top {
@@ -2608,8 +2610,9 @@ body {
   transition: all 0.3s ease;
   user-select: none;
   text-align: center;
-  min-width: 150px;
+  min-width: 200px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .aba-mes-top:hover {
