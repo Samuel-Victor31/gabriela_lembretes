@@ -326,7 +326,7 @@ const CONSULTAS_APP = {
         // Reorganizar números do mesmo mês/ano
         await this.reorganizarNumeros(ano, mes);
         
-        this.mostrarMensagem('sucesso', 'Consultoria deletada e números atualizados!');
+        this.mostrarMensagem('sucesso', 'Consultoria deletada!');
         this.carregarConsultas();
       } catch (error) {
         this.mostrarMensagem('erro', 'Erro ao deletar');
