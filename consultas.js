@@ -72,9 +72,18 @@ const CONSULTAS_APP = {
   async adicionarConsulta(e) {
     e.preventDefault();
 
+    const mesValue = document.getElementById('mesConsulta').value;
+    const anoValue = document.getElementById('anoConsulta').value;
+
+    // Validar mês e ano
+    if (!mesValue || !anoValue) {
+      alert('Mês e Ano são obrigatórios!');
+      return;
+    }
+
     const dados = {
-      mes: document.getElementById('mesConsulta').value,
-      ano: parseInt(document.getElementById('anoConsulta').value),
+      mes: mesValue.toString().padStart(2, '0'),
+      ano: parseInt(anoValue),
       nome: document.getElementById('nomeConsulta').value.trim(),
       telefone: document.getElementById('telefoneConsulta').value.trim() || null,
       data_agendamento: document.getElementById('dataAgendamento').value,
@@ -89,6 +98,16 @@ const CONSULTAS_APP = {
       return;
     }
 
+    if (!dados.data_agendamento) {
+      alert('Data de agendamento é obrigatória!');
+      return;
+    }
+
+    if (!dados.data_consulta) {
+      alert('Data da consulta é obrigatória!');
+      return;
+    }
+
     try {
       const response = await fetch(this.API_URL + '/api/consultas', {
         method: 'POST',
@@ -99,10 +118,9 @@ const CONSULTAS_APP = {
       const resultado = await response.json();
 
       if (response.ok) {
-        this.mostrarMensagem('sucesso', 'Consulta #' + resultado.numero_pessoa + ' adicionada!');
+        this.mostrarMensagem('sucesso', 'Consulta #' + resultado.numero_pessoa + ' adicionada em ' + dados.mes + '/' + dados.ano + '!');
         
-        // Limpar apenas os campos de nome, telefone e notas
-        // Manter mês, ano e datas
+        // Limpar apenas alguns campos
         document.getElementById('nomeConsulta').value = '';
         document.getElementById('telefoneConsulta').value = '';
         document.getElementById('notasConsulta').value = '';
@@ -115,7 +133,7 @@ const CONSULTAS_APP = {
         this.mostrarMensagem('erro', 'Erro: ' + (resultado.erro || 'desconhecido'));
       }
     } catch (error) {
-      this.mostrarMensagem('erro', 'Erro de conexão');
+      this.mostrarMensagem('erro', 'Erro de conexão: ' + error.message);
     }
   },
 
