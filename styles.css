@@ -2545,3 +2545,41 @@ body {
     opacity: 1;
   }
 }
+
+/* Botão Editar */
+.btn-editar {
+  background: #ffc107;
+  color: #333;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 5px;
+}
+
+.btn-editar:hover {
+  background: #ffb300;
+  transform: scale(1.1);
+}
+
+/* Modal Editar Consulta */
+.modal-editar-consulta {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeInEdit {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-editar-consulta > div {
+  animation: fadeInEdit 0.3s ease;
+}
