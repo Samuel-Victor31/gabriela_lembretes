@@ -2587,17 +2587,51 @@ body {
   animation: fadeInEdit 0.3s ease;
 }
 
-/* Tabela Unificada com Coluna de Mês */
-.tabela-consultas-unificada {
+/* Abas de Meses no Topo */
+.abas-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.aba-mes-top {
+  padding: 12px 20px;
+  background: #f5f7fa;
+  border: 2px solid #ddd;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-weight: 600;
+  color: #667eea;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.aba-mes-top:hover {
+  background: #e8ecf7;
+  border-color: #667eea;
+}
+
+.aba-mes-top.aba-ativa {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+/* Tabela com Abas */
+.tabela-consultas-com-abas {
   width: 100%;
   border-collapse: collapse;
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  border-radius: 0 8px 8px 8px;
   font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
-.tabela-consultas-unificada thead {
+.tabela-consultas-com-abas thead {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   position: sticky;
@@ -2605,7 +2639,7 @@ body {
   z-index: 10;
 }
 
-.tabela-consultas-unificada th {
+.tabela-consultas-com-abas th {
   padding: 15px;
   text-align: left;
   font-weight: 600;
@@ -2613,55 +2647,21 @@ body {
   white-space: nowrap;
 }
 
-.tabela-consultas-unificada td {
+.tabela-consultas-com-abas td {
   padding: 12px 15px;
   border-bottom: 1px solid #e0e0e0;
   font-size: 0.95em;
   color: #333;
 }
 
-.tabela-consultas-unificada tbody tr {
+.tabela-consultas-com-abas tbody tr {
   transition: background 0.2s ease;
 }
 
-.tabela-consultas-unificada tbody tr:hover {
+.tabela-consultas-com-abas tbody tr:hover {
   background: #f9f9f9;
 }
 
-.tabela-consultas-unificada tbody tr:nth-child(even) {
+.tabela-consultas-com-abas tbody tr:nth-child(even) {
   background: #fafbfc;
-}
-
-/* Coluna de Mês */
-.mes-col {
-  background: #f5f7fa;
-  font-weight: 600;
-  color: #667eea;
-  min-width: 100px;
-  cursor: pointer;
-  user-select: none;
-  position: sticky;
-  left: 0;
-  z-index: 5;
-}
-
-.mes-col:hover {
-  background: #e8ecf7;
-}
-
-.mes-col-header {
-  background: #667eea !important;
-  color: white !important;
-  min-width: 100px;
-}
-
-.toggle-mes {
-  display: inline-block;
-  transition: transform 0.3s ease;
-  margin-left: 5px;
-}
-
-.linha-consulta-unificada .mes-col strong {
-  display: block;
-  padding: 5px 0;
 }
