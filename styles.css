@@ -1335,7 +1335,8 @@ body {
 .modal-consultas-content {
   background: white;
   border-radius: 15px;
-  max-width: 1000px;
+  max-width: 1200px;
+  width: 95%;
   margin: 20px auto;
   padding: 30px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
@@ -2589,42 +2590,46 @@ body {
 
 /* Abas de Meses HORIZONTAIS no Topo */
 .abas-container {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  margin-bottom: 20px;
-  width: 100%;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 10px;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+  gap: 10px !important;
+  margin-bottom: 20px !important;
+  padding-bottom: 10px !important;
+  box-sizing: border-box !important;
+  overflow-x: auto !important;
+  
+  /* Ocupar toda a largura da grid */
+  grid-column: 1 / -1 !important;
 }
 
 .aba-mes-top {
-  padding: 15px 25px;
-  background: #f5f7fa;
-  border: 2px solid #ddd;
-  border-radius: 8px 8px 0 0;
-  cursor: pointer;
-  font-weight: 600;
-  color: #667eea;
-  transition: all 0.3s ease;
-  user-select: none;
-  text-align: center;
-  min-width: 200px;
-  white-space: nowrap;
-  flex-shrink: 0;
+  padding: 15px 20px !important;
+  background: #f5f7fa !important;
+  border: 2px solid #ddd !important;
+  border-radius: 8px 8px 0 0 !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  color: #667eea !important;
+  transition: all 0.3s ease !important;
+  user-select: none !important;
+  text-align: center !important;
+  min-width: 180px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
 }
 
 .aba-mes-top:hover {
-  background: #e8ecf7;
-  border-color: #667eea;
+  background: #e8ecf7 !important;
+  border-color: #667eea !important;
 }
 
 .aba-mes-top.aba-ativa {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border-color: #667eea !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
 }
 
 /* Tabela com Abas */
@@ -2635,6 +2640,9 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 0 8px 8px 8px;
   font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  
+  /* Ocupar toda a largura da grid */
+  grid-column: 1 / -1 !important;
 }
 
 .tabela-consultas-com-abas thead {
@@ -2670,4 +2678,18 @@ body {
 
 .tabela-consultas-com-abas tbody tr:nth-child(even) {
   background: #fafbfc;
+}
+
+/* FORÇA ABAS SEMPRE HORIZONTAIS */
+.abas-container {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  width: auto !important;
+  min-width: 100% !important;
+}
+
+.abas-container .aba-mes-top {
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
 }
