@@ -3,6 +3,7 @@ const CONSULTAS_APP = {
   API_URL: 'https://lembrete-gabriela.samuelvivi1996.workers.dev',
   consultas: [],
 
+  
   init() {
     this.btnConsultas = document.getElementById('btnConsultas');
     this.modalConsultas = document.getElementById('modalConsultas');
