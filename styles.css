@@ -4,7 +4,6 @@
   box-sizing: border-box;
 }
 
-
 :root {
   --primary-color: #667eea;
   --secondary-color: #764ba2;
@@ -2588,27 +2587,37 @@ body {
   animation: fadeInEdit 0.3s ease;
 }
 
-/* Abas de Meses no Topo */
+/* Abas de Meses Verticais no Topo */
 .abas-container {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 0;
   margin-bottom: 20px;
-  flex-wrap: wrap;
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 10px;
+  max-width: 100%;
 }
 
 .aba-mes-top {
-  padding: 12px 20px;
+  padding: 15px 20px;
   background: #f5f7fa;
   border: 2px solid #ddd;
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #ddd;
   cursor: pointer;
   font-weight: 600;
   color: #667eea;
   transition: all 0.3s ease;
   user-select: none;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.aba-mes-top:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.aba-mes-top:last-child {
+  border-radius: 0 0 8px 8px;
+  border-bottom: 2px solid #ddd;
 }
 
 .aba-mes-top:hover {
@@ -2617,7 +2626,7 @@ body {
 }
 
 .aba-mes-top.aba-ativa {
-  background: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-color: #667eea;
 }
