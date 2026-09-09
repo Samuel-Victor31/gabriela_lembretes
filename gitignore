@@ -1,0 +1,52 @@
+# Cloudflare
+.wrangler/
+wrangler.toml.local
+
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Build
+dist/
+build/
+.cache/
+
+# Testing
+.nyc_output/
+coverage/
+
+# Temporary
+temp/
+tmp/
+*.tmp
+
+# Secrets
+secrets.json
+config.local.js
+
+# Database backups
+*.db.backup
+*.db.bak
