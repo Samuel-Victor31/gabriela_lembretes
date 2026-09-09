@@ -1,5 +1,4 @@
 // Sistema de Consultas - Gabriela (Versão Lista - MELHORADO)
-
 const CONSULTAS_APP = {
   API_URL: 'https://lembrete-gabriela.samuelvivi1996.workers.dev',
   consultas: [],
