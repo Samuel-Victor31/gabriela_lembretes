@@ -2307,6 +2307,7 @@ body {
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 20px;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .tabela-consultas thead {
@@ -2320,6 +2321,7 @@ body {
   font-weight: 600;
   font-size: 0.95em;
   white-space: nowrap;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .tabela-consultas td {
@@ -2327,6 +2329,7 @@ body {
   border-bottom: 1px solid #e0e0e0;
   font-size: 0.95em;
   color: #333;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .tabela-consultas tbody tr {
@@ -2527,4 +2530,18 @@ body {
 
 .btn-cancel-delete:hover {
   background: #5a6268;
+}
+
+/* Modal Preview Relatório */
+.modal-relatorio-preview {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
