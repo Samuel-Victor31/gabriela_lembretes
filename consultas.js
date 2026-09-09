@@ -129,30 +129,47 @@ const CONSULTAS_APP = {
     const container = document.getElementById('containerConsultas');
     if (!container) return;
 
-    if (this.consultas.length === 0) {
+    if (!this.consultas || this.consultas.length === 0) {
       container.innerHTML = '<div class="empty-state"><p>Nenhuma consulta registrada</p></div>';
       return;
     }
 
+    // Criar um mapa para agrupar por mês/ano
     const porMes = {};
+    
     this.consultas.forEach(c => {
-      const chave = c.ano + '-' + c.mes;
-      if (!porMes[chave]) porMes[chave] = [];
-      porMes[chave].push(c);
+      if (!c.ano || !c.mes) return;
+      
+      // Criar chave única: YYYY-MM
+      const chave = c.ano.toString().padStart(4, '0') + '-' + c.mes.toString().padStart(2, '0');
+      
+      if (!porMes[chave]) {
+        porMes[chave] = {
+          ano: c.ano,
+          mes: c.mes,
+          consultas: []
+        };
+      }
+      
+      porMes[chave].consultas.push(c);
     });
 
+    // Limpar container
     container.innerHTML = '';
     
-    Object.keys(porMes).sort().reverse().forEach(chave => {
-      const [ano, mes] = chave.split('-');
-      const consultas = porMes[chave];
+    // Ordenar por ano/mês decrescente
+    const chaves = Object.keys(porMes).sort().reverse();
+    
+    chaves.forEach(chave => {
+      const grupo = porMes[chave];
+      const consultas = grupo.consultas;
 
       const secao = document.createElement('div');
       secao.className = 'secao-mes-lista';
 
       const titulo = document.createElement('h3');
       titulo.className = 'titulo-mes-lista';
-      titulo.textContent = mes + '/' + ano + ' (' + consultas.length + ')';
+      titulo.textContent = grupo.mes + '/' + grupo.ano + ' (' + consultas.length + ')';
       secao.appendChild(titulo);
 
       const tabela = document.createElement('table');
@@ -281,187 +298,172 @@ const CONSULTAS_APP = {
       const dados = await response.json();
 
       if (response.ok) {
-        this.gerarPDF(dados);
+        this.mostrarPreviewRelatorio(dados);
       }
     } catch (error) {
       this.mostrarMensagem('erro', 'Erro ao gerar relatório');
     }
   },
 
-  gerarPDF(dados) {
-    // Criar HTML para o PDF
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Relatório de Consultas</title>
-        <style>
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            padding: 20px;
-            color: #333;
-            background: #fff;
-          }
-          .container { max-width: 1000px; margin: 0 auto; }
-          .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 20px;
-          }
-          .header h1 { 
-            color: #667eea; 
-            font-size: 24px;
-            margin-bottom: 5px;
-          }
-          .header p { color: #999; font-size: 14px; }
-          .info {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
-          }
-          .info-item {
-            padding: 15px;
-            background: #f5f7fa;
-            border-left: 4px solid #667eea;
-            border-radius: 4px;
-          }
-          .info-label {
-            font-weight: 600;
-            color: #667eea;
-            font-size: 12px;
-            margin-bottom: 5px;
-          }
-          .info-value {
-            font-size: 16px;
-            color: #333;
-            font-weight: 600;
-          }
-          table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            background: white;
-            margin-top: 20px;
-          }
-          thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-          }
-          th { 
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 13px;
-          }
-          td { 
-            padding: 10px 12px;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 13px;
-          }
-          tbody tr:hover {
-            background: #f9f9f9;
-          }
-          tbody tr:nth-child(even) {
-            background: #fafbfc;
-          }
-          .numero { font-weight: 700; color: #667eea; }
-          .valor { font-weight: 600; color: #28a745; }
-          .footer {
-            margin-top: 30px;
-            text-align: right;
-            color: #999;
-            font-size: 12px;
-            border-top: 1px solid #e0e0e0;
-            padding-top: 15px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>📊 Relatório de Consultas</h1>
-            <p>Sistema de Lembretes - Gabriela</p>
-          </div>
+  mostrarPreviewRelatorio(dados) {
+    // Criar modal de preview
+    const modal = document.createElement('div');
+    modal.className = 'modal-relatorio-preview';
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 3000; overflow: auto;';
 
-          <div class="info">
-            <div class="info-item">
-              <div class="info-label">PERÍODO</div>
-              <div class="info-value">${dados.mes}/${dados.ano}</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">TOTAL DE CONSULTAS</div>
-              <div class="info-value">${dados.total_consultas}</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">GERADO EM</div>
-              <div class="info-value">${new Date().toLocaleDateString('pt-BR')}</div>
-            </div>
-          </div>
+    const container = document.createElement('div');
+    container.style.cssText = 'background: white; border-radius: 12px; max-width: 900px; width: 90%; max-height: 80vh; overflow: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);';
 
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Nome</th>
-                <th>Telefone</th>
-                <th>Agendamento</th>
-                <th>Consulta</th>
-                <th>Pagamento</th>
-                <th>Valor</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${dados.dados.map(d => `
-                <tr>
-                  <td class="numero">#${d.numero}</td>
-                  <td>${d.nome}</td>
-                  <td>${d.telefone || '-'}</td>
-                  <td>${d.data_agendamento}</td>
-                  <td><strong>${d.data_consulta}</strong></td>
-                  <td>${d.forma_pagamento || '-'}</td>
-                  <td class="valor">R$ ${d.valor ? d.valor.toFixed(2) : '0.00'}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-
-          <div class="footer">
-            <p>Relatório gerado em ${new Date().toLocaleString('pt-BR')}</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
-
-    // Converter HTML para PDF usando html2pdf
-    const element = document.createElement('div');
-    element.innerHTML = html;
+    // Header do modal
+    const header = document.createElement('div');
+    header.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 2px solid #667eea; background: #f5f7fa;';
+    header.innerHTML = '<h2 style="margin: 0; color: #667eea;">Preview - Relatório de Consultas</h2>';
     
-    // Usar html2pdf.js (alternativa simples)
-    const opt = {
-      margin: 10,
-      filename: 'relatorio-consultas-' + new Date().getTime() + '.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a4' }
-    };
+    const btnFechar = document.createElement('button');
+    btnFechar.textContent = '✕';
+    btnFechar.style.cssText = 'background: none; border: none; font-size: 24px; cursor: pointer; color: #667eea;';
+    btnFechar.onclick = () => modal.remove();
+    header.appendChild(btnFechar);
+    
+    container.appendChild(header);
 
-    // Carregar html2pdf dinamicamente
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-    script.onload = () => {
-      html2pdf().set(opt).from(html).save();
-      this.mostrarMensagem('sucesso', 'PDF baixado com sucesso!');
+    // Conteúdo do relatório
+    const conteudo = document.createElement('div');
+    conteudo.style.cssText = 'padding: 30px;';
+    conteudo.innerHTML = `
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #667eea; margin: 0 0 5px 0;">📊 Relatório de Consultas</h1>
+        <p style="color: #999; margin: 0;">Sistema de Lembretes - Gabriela</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px;">
+        <div style="padding: 15px; background: #f5f7fa; border-left: 4px solid #667eea; border-radius: 4px;">
+          <div style="font-weight: 600; color: #667eea; font-size: 12px; margin-bottom: 5px;">PERÍODO</div>
+          <div style="font-size: 16px; color: #333; font-weight: 600;">${dados.mes}/${dados.ano}</div>
+        </div>
+        <div style="padding: 15px; background: #f5f7fa; border-left: 4px solid #667eea; border-radius: 4px;">
+          <div style="font-weight: 600; color: #667eea; font-size: 12px; margin-bottom: 5px;">TOTAL DE CONSULTAS</div>
+          <div style="font-size: 16px; color: #333; font-weight: 600;">${dados.total_consultas}</div>
+        </div>
+        <div style="padding: 15px; background: #f5f7fa; border-left: 4px solid #667eea; border-radius: 4px;">
+          <div style="font-weight: 600; color: #667eea; font-size: 12px; margin-bottom: 5px;">GERADO EM</div>
+          <div style="font-size: 16px; color: #333; font-weight: 600;">${new Date().toLocaleDateString('pt-BR')}</div>
+        </div>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; font-family: 'Segoe UI', Arial, sans-serif;">
+        <thead>
+          <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <th style="padding: 12px; text-align: left; font-weight: 600;">#</th>
+            <th style="padding: 12px; text-align: left; font-weight: 600;">Nome</th>
+            <th style="padding: 12px; text-align: left; font-weight: 600;">Telefone</th>
+            <th style="padding: 12px; text-align: left; font-weight: 600;">Agendamento</th>
+            <th style="padding: 12px; text-align: left; font-weight: 600;">Consulta</th>
+            <th style="padding: 12px; text-align: left; font-weight: 600;">Pagamento</th>
+            <th style="padding: 12px; text-align: left; font-weight: 600;">Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${dados.dados.map((d, i) => `
+            <tr style="border-bottom: 1px solid #e0e0e0; background: ${i % 2 === 0 ? '#fff' : '#fafbfc'};">
+              <td style="padding: 10px 12px; color: #667eea; font-weight: 700;">#${d.numero}</td>
+              <td style="padding: 10px 12px; color: #333;">${d.nome}</td>
+              <td style="padding: 10px 12px; color: #333;">${d.telefone || '-'}</td>
+              <td style="padding: 10px 12px; color: #333;">${d.data_agendamento}</td>
+              <td style="padding: 10px 12px; color: #333; font-weight: 600;">${d.data_consulta}</td>
+              <td style="padding: 10px 12px; color: #333;">${d.forma_pagamento || '-'}</td>
+              <td style="padding: 10px 12px; color: #28a745; font-weight: 600; text-align: right;">R$ ${d.valor ? d.valor.toFixed(2) : '0.00'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+    
+    container.appendChild(conteudo);
+
+    // Footer com botões
+    const footer = document.createElement('div');
+    footer.style.cssText = 'display: flex; justify-content: flex-end; gap: 10px; padding: 20px; border-top: 1px solid #e0e0e0; background: #f5f7fa;';
+    
+    const btnFecharFooter = document.createElement('button');
+    btnFecharFooter.textContent = 'Fechar';
+    btnFecharFooter.style.cssText = 'background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;';
+    btnFecharFooter.onclick = () => modal.remove();
+    footer.appendChild(btnFecharFooter);
+
+    const btnBaixarPDF = document.createElement('button');
+    btnBaixarPDF.textContent = '⬇️ Baixar como PDF';
+    btnBaixarPDF.style.cssText = 'background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;';
+    btnBaixarPDF.onclick = () => {
+      modal.remove();
+      this.gerarPDFSimples(dados);
     };
-    script.onerror = () => {
-      // Fallback: abrir em nova janela
-      const janela = window.open();
-      janela.document.write(html);
-      janela.document.close();
-      this.mostrarMensagem('sucesso', 'Relatório aberto!');
+    footer.appendChild(btnBaixarPDF);
+
+    container.appendChild(footer);
+    modal.appendChild(container);
+    document.body.appendChild(modal);
+  },
+
+  gerarPDFSimples(dados) {
+    // Carregar jsPDF
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    script.onload = () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('l', 'mm', 'a4'); // landscape
+
+      let yPos = 20;
+
+      // Título
+      doc.setFontSize(18);
+      doc.setTextColor(102, 126, 234);
+      doc.text('Relatório de Consultas', 15, yPos);
+
+      // Info
+      yPos += 15;
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text('Período: ' + dados.mes + '/' + dados.ano, 15, yPos);
+      yPos += 6;
+      doc.text('Total: ' + dados.total_consultas + ' consulta(s)', 15, yPos);
+      yPos += 6;
+      doc.text('Gerado em: ' + new Date().toLocaleString('pt-BR'), 15, yPos);
+
+      // Tabela
+      yPos += 10;
+      const tabelaDados = dados.dados.map(d => [
+        '#' + d.numero,
+        d.nome,
+        d.telefone || '-',
+        d.data_agendamento,
+        d.data_consulta,
+        d.forma_pagamento || '-',
+        'R$ ' + (d.valor ? d.valor.toFixed(2) : '0.00')
+      ]);
+
+      doc.autoTable({
+        head: [['#', 'Nome', 'Telefone', 'Agendamento', 'Consulta', 'Pagamento', 'Valor']],
+        body: tabelaDados,
+        startY: yPos,
+        theme: 'grid',
+        headStyles: {
+          fillColor: [102, 126, 234],
+          textColor: [255, 255, 255],
+          fontStyle: 'bold'
+        },
+        bodyStyles: {
+          textColor: [50, 50, 50],
+          font: 'arial'
+        },
+        alternateRowStyles: {
+          fillColor: [250, 251, 252]
+        }
+      });
+
+      // Download
+      doc.save('relatorio-consultas-' + new Date().getTime() + '.pdf');
+      this.mostrarMensagem('sucesso', 'PDF baixado com sucesso!');
     };
     document.head.appendChild(script);
   },
