@@ -506,7 +506,7 @@ const APP = {
 
     let lembretesExibir = this.lembretesVerificar;
 
-    // Filtrar por período (agora funciona com lembretes sem data também)
+    // Filtrar por período (PASSADO + FUTURO)
     const periodoFiltro = this.filtroSemana.value;
     if (periodoFiltro !== 'todos') {
       const hoje = new Date();
@@ -515,23 +515,27 @@ const APP = {
         
         const dataLembrete = new Date(l.data);
         let diasAtrás = 0;
+        let diasFrente = 0;
 
         switch (periodoFiltro) {
           case 'semana':
             diasAtrás = 7;
+            diasFrente = 0;  // Não filtrar para frente
             break;
           case 'duas-semanas':
             diasAtrás = 14;
+            diasFrente = 0;
             break;
           case 'mes':
             diasAtrás = 30;
+            diasFrente = 0;
             break;
         }
 
         const dataLimite = new Date(hoje);
         dataLimite.setDate(dataLimite.getDate() - diasAtrás);
 
-        return dataLembrete >= dataLimite && dataLembrete <= hoje;
+        return dataLembrete >= dataLimite;
       });
     }
 
