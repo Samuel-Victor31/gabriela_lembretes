@@ -176,11 +176,13 @@ const CONSULTAS_APP = {
     const porMes = {};
     this.consultas.forEach(c => {
       if (!c.ano || !c.mes) return;
-      const chave = c.ano + '-' + c.mes;
+      // Garantir que mês sempre tem 2 dígitos para ordenação correta
+      const mesFormatado = String(c.mes).padStart(2, '0');
+      const chave = c.ano + '-' + mesFormatado;
       if (!porMes[chave]) {
         porMes[chave] = {
           ano: c.ano,
-          mes: c.mes,
+          mes: mesFormatado,
           consultas: []
         };
       }
@@ -202,12 +204,12 @@ const CONSULTAS_APP = {
     // Criar abas
     chaves.forEach((chave, index) => {
       const grupo = porMes[chave];
-      const mesStr = grupo.mes + ' - ' + this.nomeMes(grupo.mes) + '/' + grupo.ano;
+      const mesStr = this.nomeMes(grupo.mes) + '/' + grupo.ano;
       
       const aba = document.createElement('button');
       aba.className = 'aba-mes-top';
       if (index === 0) aba.classList.add('aba-ativa');
-      aba.textContent = mesStr + ' (' + grupo.consultas.length + ')';
+      aba.textContent = mesStr;
       aba.setAttribute('data-mes', chave);
       
       aba.addEventListener('click', () => {
