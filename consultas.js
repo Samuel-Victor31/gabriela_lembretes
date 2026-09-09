@@ -36,27 +36,27 @@ const CONSULTAS_APP = {
     this.modalConsultas.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     
-    // Pré-preencher data e mês apenas se estiverem vazios
+    // Pré-preencher data e mês SEMPRE com hoje (não apenas se vazio)
     const hoje = new Date();
     const ano = hoje.getFullYear();
     const mes = String(hoje.getMonth() + 1).padStart(2, '0');
     const dia = String(hoje.getDate()).padStart(2, '0');
     
-    // Pré-preencher mês se estiver vazio
+    // SEMPRE atualizar mês
     const mesInput = document.getElementById('mesConsulta');
-    if (mesInput && !mesInput.value) {
+    if (mesInput) {
       mesInput.value = mes;
     }
     
-    // Pré-preencher ano se estiver vazio
+    // SEMPRE atualizar ano
     const anoInput = document.getElementById('anoConsulta');
-    if (anoInput && !anoInput.value) {
+    if (anoInput) {
       anoInput.value = ano;
     }
     
-    // Pré-preencher data de agendamento se estiver vazia
+    // SEMPRE atualizar data de agendamento
     const dataAgInput = document.getElementById('dataAgendamento');
-    if (dataAgInput && !dataAgInput.value) {
+    if (dataAgInput) {
       dataAgInput.value = ano + '-' + mes + '-' + dia;
     }
     
