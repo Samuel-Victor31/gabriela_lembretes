@@ -108,6 +108,12 @@ const CONSULTAS_APP = {
       return;
     }
 
+    // Validar formato da data de consulta (YYYY-MM-DD)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dados.data_consulta)) {
+      alert('Data da consulta em formato inválido!');
+      return;
+    }
+
     try {
       const response = await fetch(this.API_URL + '/api/consultas', {
         method: 'POST',
