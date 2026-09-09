@@ -160,17 +160,25 @@ const CONSULTAS_APP = {
     // Ordenar por ano/mês decrescente
     const chaves = Object.keys(porMes).sort().reverse();
     
-    chaves.forEach(chave => {
+    chaves.forEach((chave, index) => {
       const grupo = porMes[chave];
       const consultas = grupo.consultas;
+      const mesStr = grupo.mes + '/' + grupo.ano;
 
+      // Criar seção accordion
       const secao = document.createElement('div');
-      secao.className = 'secao-mes-lista';
+      secao.className = 'secao-mes-accordion';
 
-      const titulo = document.createElement('h3');
-      titulo.className = 'titulo-mes-lista';
-      titulo.textContent = grupo.mes + '/' + grupo.ano + ' (' + consultas.length + ')';
-      secao.appendChild(titulo);
+      // Título clicável (aba)
+      const titulo = document.createElement('div');
+      titulo.className = 'aba-mes';
+      titulo.style.cssText = 'cursor: pointer; user-select: none; padding: 15px; background: #667eea; color: white; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; font-weight: 600; margin-bottom: 15px;';
+      titulo.innerHTML = '<span>' + mesStr + ' (' + consultas.length + ')</span><span class="icone-aba">▼</span>';
+      
+      // Conteúdo da tabela (inicialmente oculto, exceto o primeiro)
+      const conteudo = document.createElement('div');
+      conteudo.className = 'conteudo-mes-accordion';
+      conteudo.style.cssText = 'display: ' + (index === 0 ? 'block' : 'none') + '; overflow: hidden;';
 
       const tabela = document.createElement('table');
       tabela.className = 'tabela-consultas';
@@ -223,7 +231,43 @@ const CONSULTAS_APP = {
       });
       
       tabela.appendChild(tbody);
-      secao.appendChild(tabela);
+      conteudo.appendChild(tabela);
+
+      // Event listener para abrir/fechar aba
+      titulo.addEventListener('click', () => {
+        // Fechar todas as outras abas
+        const todasAbas = document.querySelectorAll('.conteudo-mes-accordion');
+        const todosIcones = document.querySelectorAll('.icone-aba');
+        
+        todasAbas.forEach(aba => {
+          if (aba !== conteudo) {
+            aba.style.display = 'none';
+          }
+        });
+        
+        todosIcones.forEach(icone => {
+          if (icone !== titulo.querySelector('.icone-aba')) {
+            icone.style.transform = 'rotate(0deg)';
+          }
+        });
+
+        // Abrir/fechar a aba clicada
+        if (conteudo.style.display === 'none') {
+          conteudo.style.display = 'block';
+          titulo.querySelector('.icone-aba').style.transform = 'rotate(180deg)';
+        } else {
+          conteudo.style.display = 'none';
+          titulo.querySelector('.icone-aba').style.transform = 'rotate(0deg)';
+        }
+      });
+
+      // Setar rotação inicial para primeira aba
+      if (index === 0) {
+        titulo.querySelector('.icone-aba').style.transform = 'rotate(180deg)';
+      }
+
+      secao.appendChild(titulo);
+      secao.appendChild(conteudo);
       container.appendChild(secao);
     });
   },
@@ -586,65 +630,118 @@ const CONSULTAS_APP = {
   },
 
   gerarPDFSimples(dados) {
-    // Carregar jsPDF
+    // Criar um link temporário para download
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    
     script.onload = () => {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF('l', 'mm', 'a4'); // landscape
-
-      let yPos = 20;
-
-      // Título
-      doc.setFontSize(18);
-      doc.setTextColor(102, 126, 234);
-      doc.text('Relatório de Consultas', 15, yPos);
-
-      // Info
-      yPos += 15;
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.text('Período: ' + dados.mes + '/' + dados.ano, 15, yPos);
-      yPos += 6;
-      doc.text('Total: ' + dados.total_consultas + ' consulta(s)', 15, yPos);
-      yPos += 6;
-      doc.text('Gerado em: ' + new Date().toLocaleString('pt-BR'), 15, yPos);
-
-      // Tabela
-      yPos += 10;
-      const tabelaDados = dados.dados.map(d => [
-        '#' + d.numero,
-        d.nome,
-        d.telefone || '-',
-        d.data_agendamento,
-        d.data_consulta,
-        d.forma_pagamento || '-',
-        'R$ ' + (d.valor ? d.valor.toFixed(2) : '0.00')
-      ]);
-
-      doc.autoTable({
-        head: [['#', 'Nome', 'Telefone', 'Agendamento', 'Consulta', 'Pagamento', 'Valor']],
-        body: tabelaDados,
-        startY: yPos,
-        theme: 'grid',
-        headStyles: {
-          fillColor: [102, 126, 234],
-          textColor: [255, 255, 255],
-          fontStyle: 'bold'
-        },
-        bodyStyles: {
-          textColor: [50, 50, 50],
-          font: 'arial'
-        },
-        alternateRowStyles: {
-          fillColor: [250, 251, 252]
-        }
-      });
-
-      // Download
-      doc.save('relatorio-consultas-' + new Date().getTime() + '.pdf');
-      this.mostrarMensagem('sucesso', 'PDF baixado com sucesso!');
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'mm', 'a4'); // landscape
+        
+        let yPos = 20;
+        
+        // Título
+        doc.setFontSize(18);
+        doc.setTextColor(102, 126, 234);
+        doc.text('Relatório de Consultas', 15, yPos);
+        
+        // Subtítulo
+        yPos += 10;
+        doc.setFontSize(10);
+        doc.setTextColor(150, 150, 150);
+        doc.text('Sistema de Lembretes - Gabriela', 15, yPos);
+        
+        // Info boxes
+        yPos += 15;
+        doc.setFontSize(10);
+        doc.setTextColor(102, 126, 234);
+        doc.text('Período: ' + dados.mes + '/' + dados.ano, 15, yPos);
+        
+        yPos += 7;
+        doc.text('Total de Consultas: ' + dados.total_consultas, 15, yPos);
+        
+        yPos += 7;
+        doc.setTextColor(100, 100, 100);
+        doc.text('Gerado em: ' + new Date().toLocaleString('pt-BR'), 15, yPos);
+        
+        // Tabela manual
+        yPos += 15;
+        
+        // Headers
+        const headers = ['#', 'Nome', 'Telefone', 'Agendamento', 'Consulta', 'Pagamento', 'Valor'];
+        const colWidths = [10, 35, 30, 28, 28, 25, 28];
+        let xPos = 15;
+        
+        doc.setFontSize(9);
+        doc.setTextColor(255, 255, 255);
+        doc.setFillColor(102, 126, 234);
+        
+        // Desenhar headers
+        headers.forEach((header, i) => {
+          doc.rect(xPos, yPos, colWidths[i], 8, 'F');
+          doc.text(header, xPos + 2, yPos + 5);
+          xPos += colWidths[i];
+        });
+        
+        yPos += 8;
+        
+        // Linhas de dados
+        doc.setTextColor(50, 50, 50);
+        doc.setFontSize(8);
+        
+        dados.dados.forEach((d, idx) => {
+          if (yPos > 270) {
+            doc.addPage();
+            yPos = 20;
+          }
+          
+          const rowData = [
+            '#' + d.numero,
+            d.nome,
+            d.telefone || '-',
+            d.data_agendamento,
+            d.data_consulta,
+            d.forma_pagamento || '-',
+            'R$ ' + (d.valor ? d.valor.toFixed(2) : '0.00')
+          ];
+          
+          // Cor alternada
+          if (idx % 2 === 0) {
+            doc.setFillColor(250, 251, 252);
+            xPos = 15;
+            headers.forEach((h, i) => {
+              doc.rect(xPos, yPos, colWidths[i], 7, 'F');
+              xPos += colWidths[i];
+            });
+          }
+          
+          xPos = 15;
+          rowData.forEach((text, i) => {
+            doc.text(text.toString(), xPos + 2, yPos + 4.5);
+            xPos += colWidths[i];
+          });
+          
+          yPos += 7;
+        });
+        
+        // Rodapé
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text('Documento gerado automaticamente pelo Sistema de Lembretes - Gabriela', 15, 280);
+        
+        // Download
+        doc.save('relatorio-consultas-' + new Date().getTime() + '.pdf');
+        this.mostrarMensagem('sucesso', 'PDF baixado com sucesso!');
+      } catch (error) {
+        this.mostrarMensagem('erro', 'Erro ao gerar PDF: ' + error.message);
+      }
     };
+    
+    script.onerror = () => {
+      this.mostrarMensagem('erro', 'Erro ao carregar biblioteca PDF');
+    };
+    
     document.head.appendChild(script);
   },
 
