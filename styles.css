@@ -2301,6 +2301,7 @@ body {
 
 .tabela-consultas {
   width: 100%;
+  min-width: 1200px;
   border-collapse: collapse;
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -2313,6 +2314,8 @@ body {
 .tabela-consultas thead {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  position: sticky;
+  top: 0;
 }
 
 .tabela-consultas th {
@@ -2347,13 +2350,13 @@ body {
 .numero-col {
   font-weight: 700;
   color: #667eea;
-  min-width: 50px;
+  min-width: 60px;
 }
 
 .nome-col {
   font-weight: 600;
   color: #333;
-  min-width: 150px;
+  min-width: 180px;
 }
 
 .tel-col {
@@ -2376,20 +2379,20 @@ body {
 .valor-col {
   font-weight: 600;
   color: #28a745;
-  min-width: 100px;
+  min-width: 120px;
   text-align: right;
 }
 
 .notas-col {
   color: #666;
   font-size: 0.9em;
-  max-width: 200px;
+  min-width: 150px;
   word-break: break-word;
 }
 
 .acao-col {
   text-align: center;
-  min-width: 60px;
+  min-width: 80px;
   color: #333;
 }
 
@@ -2586,10 +2589,21 @@ body {
 
 /* Accordion de Meses */
 .secao-mes-accordion {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .aba-mes {
+  cursor: pointer;
+  user-select: none;
+  padding: 15px;
+  background: #667eea;
+  color: white;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 0;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -2602,10 +2616,16 @@ body {
 .icone-aba {
   transition: transform 0.3s ease;
   display: inline-block;
+  font-size: 1.2em;
 }
 
 .conteudo-mes-accordion {
   animation: slideDown 0.3s ease;
+  background: white;
+  overflow-x: auto;
+  max-height: 600px;
+  overflow-y: auto;
+  border-radius: 0 0 8px 8px;
 }
 
 @keyframes slideDown {
@@ -2615,11 +2635,12 @@ body {
   }
   to {
     opacity: 1;
-    max-height: 1000px;
+    max-height: 600px;
   }
 }
 
 .conteudo-mes-accordion .tabela-consultas {
-  border-radius: 0 0 8px 8px;
+  border-radius: 0;
   margin-bottom: 0;
+  box-shadow: none;
 }
