@@ -626,6 +626,32 @@ const CONSULTAS_APP = {
     // Conteúdo do relatório
     const conteudo = document.createElement('div');
     conteudo.style.cssText = 'padding: 30px;';
+    
+    // Agrupar dados por mês/ano
+    const porMes = {};
+    dados.dados.forEach(d => {
+      const [ano, mes] = d.data_consulta.split('-');
+      const chave = ano + '-' + mes;
+      if (!porMes[chave]) {
+        porMes[chave] = {
+          ano: ano,
+          mes: mes,
+          consultas: []
+        };
+      }
+      porMes[chave].consultas.push(d);
+    });
+
+    // Ordenar por mês
+    const chaves = Object.keys(porMes).sort();
+
+    // Helper para converter número do mês para nome
+    const nomeMes = (numMes) => {
+      const meses = ['', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      return meses[parseInt(numMes)];
+    };
+
     conteudo.innerHTML = `
       <div style="text-align: center; margin-bottom: 30px;">
         <h1 style="color: #667eea; margin: 0 0 5px 0;">📊 Relatório de Consultas</h1>
@@ -635,7 +661,7 @@ const CONSULTAS_APP = {
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px;">
         <div style="padding: 15px; background: #f5f7fa; border-left: 4px solid #667eea; border-radius: 4px;">
           <div style="font-weight: 600; color: #667eea; font-size: 12px; margin-bottom: 5px;">PERÍODO</div>
-          <div style="font-size: 16px; color: #333; font-weight: 600;">${dados.mes}/${dados.ano}</div>
+          <div style="font-size: 16px; color: #333; font-weight: 600;">${dados.mes !== 'Todos' ? dados.mes + '/' + dados.ano : 'Todos os meses'}</div>
         </div>
         <div style="padding: 15px; background: #f5f7fa; border-left: 4px solid #667eea; border-radius: 4px;">
           <div style="font-weight: 600; color: #667eea; font-size: 12px; margin-bottom: 5px;">TOTAL DE CONSULTAS</div>
@@ -647,32 +673,42 @@ const CONSULTAS_APP = {
         </div>
       </div>
 
-      <table style="width: 100%; border-collapse: collapse; font-family: 'Segoe UI', Arial, sans-serif;">
-        <thead>
-          <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-            <th style="padding: 12px; text-align: left; font-weight: 600;">#</th>
-            <th style="padding: 12px; text-align: left; font-weight: 600;">Nome</th>
-            <th style="padding: 12px; text-align: left; font-weight: 600;">Telefone</th>
-            <th style="padding: 12px; text-align: left; font-weight: 600;">Agendamento</th>
-            <th style="padding: 12px; text-align: left; font-weight: 600;">Consulta</th>
-            <th style="padding: 12px; text-align: left; font-weight: 600;">Pagamento</th>
-            <th style="padding: 12px; text-align: left; font-weight: 600;">Valor</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${dados.dados.map((d, i) => `
-            <tr style="border-bottom: 1px solid #e0e0e0; background: ${i % 2 === 0 ? '#fff' : '#fafbfc'};">
-              <td style="padding: 10px 12px; color: #667eea; font-weight: 700;">#${d.numero}</td>
-              <td style="padding: 10px 12px; color: #333;">${d.nome}</td>
-              <td style="padding: 10px 12px; color: #333;">${d.telefone || '-'}</td>
-              <td style="padding: 10px 12px; color: #333;">${d.data_agendamento}</td>
-              <td style="padding: 10px 12px; color: #333; font-weight: 600;">${d.data_consulta}</td>
-              <td style="padding: 10px 12px; color: #333;">${d.forma_pagamento || '-'}</td>
-              <td style="padding: 10px 12px; color: #28a745; font-weight: 600; text-align: right;">R$ ${d.valor ? d.valor.toFixed(2) : '0.00'}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
+      ${chaves.map(chave => {
+        const grupo = porMes[chave];
+        return `
+          <div style="margin-bottom: 30px;">
+            <h3 style="color: #667eea; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
+              ${nomeMes(grupo.mes)}/${grupo.ano}
+            </h3>
+            <table style="width: 100%; border-collapse: collapse; font-family: 'Segoe UI', Arial, sans-serif;">
+              <thead>
+                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                  <th style="padding: 12px; text-align: left; font-weight: 600;">#</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 600;">Nome</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 600;">Telefone</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 600;">Agendamento</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 600;">Consulta</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 600;">Pagamento</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 600;">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${grupo.consultas.map((d, i) => `
+                  <tr style="border-bottom: 1px solid #e0e0e0; background: ${i % 2 === 0 ? '#fff' : '#fafbfc'};">
+                    <td style="padding: 10px 12px; color: #667eea; font-weight: 700;">#${i + 1}</td>
+                    <td style="padding: 10px 12px; color: #333;">${d.nome}</td>
+                    <td style="padding: 10px 12px; color: #333;">${d.telefone || '-'}</td>
+                    <td style="padding: 10px 12px; color: #333;">${d.data_agendamento}</td>
+                    <td style="padding: 10px 12px; color: #333; font-weight: 600;">${d.data_consulta}</td>
+                    <td style="padding: 10px 12px; color: #333;">${d.forma_pagamento || '-'}</td>
+                    <td style="padding: 10px 12px; color: #28a745; font-weight: 600; text-align: right;">R$ ${d.valor ? d.valor.toFixed(2) : '0.00'}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }).join('')}
     `;
     
     container.appendChild(conteudo);
@@ -728,7 +764,7 @@ const CONSULTAS_APP = {
         yPos += 15;
         doc.setFontSize(10);
         doc.setTextColor(102, 126, 234);
-        doc.text('Período: ' + dados.mes + '/' + dados.ano, 15, yPos);
+        doc.text('Período: ' + (dados.mes !== 'Todos' ? dados.mes + '/' + dados.ano : 'Todos os meses'), 15, yPos);
         
         yPos += 7;
         doc.text('Total de Consultas: ' + dados.total_consultas, 15, yPos);
@@ -737,64 +773,102 @@ const CONSULTAS_APP = {
         doc.setTextColor(100, 100, 100);
         doc.text('Gerado em: ' + new Date().toLocaleString('pt-BR'), 15, yPos);
         
-        // Tabela manual
-        yPos += 15;
+        // Agrupar dados por mês
+        const porMes = {};
+        dados.dados.forEach(d => {
+          const [ano, mes] = d.data_consulta.split('-');
+          const chave = ano + '-' + mes;
+          if (!porMes[chave]) {
+            porMes[chave] = {
+              ano: ano,
+              mes: mes,
+              consultas: []
+            };
+          }
+          porMes[chave].consultas.push(d);
+        });
+
+        const chaves = Object.keys(porMes).sort();
         
+        // Helper para nome do mês
+        const nomeMes = (numMes) => {
+          const meses = ['', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+          return meses[parseInt(numMes)];
+        };
+
         // Headers
         const headers = ['#', 'Nome', 'Telefone', 'Agendamento', 'Consulta', 'Pagamento', 'Valor'];
         const colWidths = [10, 35, 30, 28, 28, 25, 28];
-        let xPos = 15;
         
-        doc.setFontSize(9);
-        doc.setTextColor(255, 255, 255);
-        doc.setFillColor(102, 126, 234);
-        
-        // Desenhar headers
-        headers.forEach((header, i) => {
-          doc.rect(xPos, yPos, colWidths[i], 8, 'F');
-          doc.text(header, xPos + 2, yPos + 5);
-          xPos += colWidths[i];
-        });
-        
-        yPos += 8;
-        
-        // Linhas de dados
-        doc.setTextColor(50, 50, 50);
-        doc.setFontSize(8);
-        
-        dados.dados.forEach((d, idx) => {
+        // Processar cada mês
+        chaves.forEach((chave, mesIdx) => {
+          const grupo = porMes[chave];
+          
+          // Cabeçalho do mês
+          yPos += 10;
           if (yPos > 270) {
             doc.addPage();
             yPos = 20;
           }
           
-          const rowData = [
-            '#' + d.numero,
-            d.nome,
-            d.telefone || '-',
-            d.data_agendamento,
-            d.data_consulta,
-            d.forma_pagamento || '-',
-            'R$ ' + (d.valor ? d.valor.toFixed(2) : '0.00')
-          ];
+          doc.setFontSize(12);
+          doc.setTextColor(102, 126, 234);
+          doc.text(nomeMes(grupo.mes) + '/' + grupo.ano, 15, yPos);
+          yPos += 8;
           
-          // Cor alternada
-          if (idx % 2 === 0) {
-            doc.setFillColor(250, 251, 252);
-            xPos = 15;
-            headers.forEach((h, i) => {
-              doc.rect(xPos, yPos, colWidths[i], 7, 'F');
-              xPos += colWidths[i];
-            });
-          }
+          // Headers da tabela
+          let xPos = 15;
+          doc.setFontSize(9);
+          doc.setTextColor(255, 255, 255);
+          doc.setFillColor(102, 126, 234);
           
-          xPos = 15;
-          rowData.forEach((text, i) => {
-            doc.text(text.toString(), xPos + 2, yPos + 4.5);
+          headers.forEach((header, i) => {
+            doc.rect(xPos, yPos, colWidths[i], 8, 'F');
+            doc.text(header, xPos + 2, yPos + 5);
             xPos += colWidths[i];
           });
           
-          yPos += 7;
+          yPos += 8;
+          
+          // Linhas de dados do mês
+          doc.setTextColor(50, 50, 50);
+          doc.setFontSize(8);
+          
+          grupo.consultas.forEach((d, idx) => {
+            if (yPos > 270) {
+              doc.addPage();
+              yPos = 20;
+            }
+            
+            const rowData = [
+              '#' + (idx + 1), // Reiniciar numeração por mês
+              d.nome,
+              d.telefone || '-',
+              d.data_agendamento,
+              d.data_consulta,
+              d.forma_pagamento || '-',
+              'R$ ' + (d.valor ? d.valor.toFixed(2) : '0.00')
+            ];
+            
+            // Cor alternada
+            if (idx % 2 === 0) {
+              doc.setFillColor(250, 251, 252);
+              xPos = 15;
+              headers.forEach((h, i) => {
+                doc.rect(xPos, yPos, colWidths[i], 7, 'F');
+                xPos += colWidths[i];
+              });
+            }
+            
+            xPos = 15;
+            rowData.forEach((text, i) => {
+              doc.text(text.toString(), xPos + 2, yPos + 4.5);
+              xPos += colWidths[i];
+            });
+            
+            yPos += 7;
+          });
         });
         
         // Rodapé
