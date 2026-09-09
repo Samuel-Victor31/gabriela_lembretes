@@ -506,36 +506,37 @@ const APP = {
 
     let lembretesExibir = this.lembretesVerificar;
 
-    // Filtrar por período (PASSADO + FUTURO)
+    // Filtrar por período (DE HOJE PARA O FUTURO)
     const periodoFiltro = this.filtroSemana.value;
     if (periodoFiltro !== 'todos') {
       const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0); // Zerar horário para comparação por dia
+      
       lembretesExibir = lembretesExibir.filter(l => {
-        if (!l.data) return true; // Mostrar lembretes sem data em qualquer filtro
+        if (!l.data) return false; // Não mostrar lembretes sem data em filtros específicos
         
         const dataLembrete = new Date(l.data);
-        let diasAtrás = 0;
+        dataLembrete.setHours(0, 0, 0, 0);
+        
         let diasFrente = 0;
 
         switch (periodoFiltro) {
           case 'semana':
-            diasAtrás = 7;
-            diasFrente = 0;  // Não filtrar para frente
+            diasFrente = 7;  // Hoje até 7 dias
             break;
           case 'duas-semanas':
-            diasAtrás = 14;
-            diasFrente = 0;
+            diasFrente = 14; // Hoje até 14 dias
             break;
           case 'mes':
-            diasAtrás = 30;
-            diasFrente = 0;
+            diasFrente = 30; // Hoje até 30 dias
             break;
         }
 
         const dataLimite = new Date(hoje);
-        dataLimite.setDate(dataLimite.getDate() - diasAtrás);
+        dataLimite.setDate(dataLimite.getDate() + diasFrente);
 
-        return dataLembrete >= dataLimite;
+        // Entre hoje e a data limite
+        return dataLembrete >= hoje && dataLembrete <= dataLimite;
       });
     }
 
