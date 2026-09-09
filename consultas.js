@@ -187,15 +187,60 @@ const CONSULTAS_APP = {
   },
 
   async deletarConsulta(id) {
-    if (!confirm('Deletar consulta?')) return;
+    const confirmDelete = document.createElement('div');
+    confirmDelete.className = 'modal-confirmacao';
+    confirmDelete.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 3000;';
 
-    try {
-      await fetch(this.API_URL + '/api/consultas/' + id, { method: 'DELETE' });
-      this.mostrarMensagem('sucesso', 'Deletado!');
-      this.carregarConsultas();
-    } catch (error) {
-      this.mostrarMensagem('erro', 'Erro ao deletar');
-    }
+    const content = document.createElement('div');
+    content.className = 'modal-confirmacao-content';
+    content.style.cssText = 'background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-width: 400px; text-align: center;';
+
+    const titulo = document.createElement('h3');
+    titulo.textContent = 'Deletar Consulta?';
+    titulo.style.cssText = 'color: #333; margin: 0 0 15px 0; font-size: 1.2em;';
+    content.appendChild(titulo);
+
+    const mensagem = document.createElement('p');
+    mensagem.textContent = 'Esta ação não pode ser desfeita';
+    mensagem.style.cssText = 'color: #666; margin: 0 0 25px 0;';
+    content.appendChild(mensagem);
+
+    const botoes = document.createElement('div');
+    botoes.className = 'modal-confirmacao-buttons';
+    botoes.style.cssText = 'display: flex; gap: 10px; justify-content: center;';
+
+    const btnConfirm = document.createElement('button');
+    btnConfirm.className = 'btn-confirm-delete';
+    btnConfirm.textContent = '🗑️ Deletar';
+    btnConfirm.style.cssText = 'background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;';
+
+    const btnCancel = document.createElement('button');
+    btnCancel.className = 'btn-cancel-delete';
+    btnCancel.textContent = 'Cancelar';
+    btnCancel.style.cssText = 'background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;';
+
+    botoes.appendChild(btnConfirm);
+    botoes.appendChild(btnCancel);
+    content.appendChild(botoes);
+
+    confirmDelete.appendChild(content);
+    document.body.appendChild(confirmDelete);
+
+    btnCancel.addEventListener('click', () => {
+      confirmDelete.remove();
+    });
+
+    btnConfirm.addEventListener('click', async () => {
+      confirmDelete.remove();
+
+      try {
+        await fetch(this.API_URL + '/api/consultas/' + id, { method: 'DELETE' });
+        this.mostrarMensagem('sucesso', 'Consultoria deletada!');
+        this.carregarConsultas();
+      } catch (error) {
+        this.mostrarMensagem('erro', 'Erro ao deletar');
+      }
+    });
   },
 
   async gerarRelatorio() {
