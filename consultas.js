@@ -1,3 +1,4 @@
+// Sistema de Consultas - Gabriela (Versão Lista - MELHORADO)
 const CONSULTAS_APP = {
   API_URL: 'https://lembrete-gabriela.samuelvivi1996.workers.dev',
   consultas: [],
@@ -6,7 +7,9 @@ const CONSULTAS_APP = {
     this.btnConsultas = document.getElementById('btnConsultas');
     this.modalConsultas = document.getElementById('modalConsultas');
     
-    if (!this.btnConsultas || !this.modalConsultas) return;
+    if (!this.btnConsultas || !this.modalConsultas) {
+      return;
+    }
 
     this.adicionarEventos();
     this.carregarConsultas();
@@ -85,9 +88,15 @@ const CONSULTAS_APP = {
     try {
       const response = await fetch(this.API_URL + '/api/consultas');
       this.consultas = await response.json();
+      
+      if (!Array.isArray(this.consultas)) {
+        this.consultas = [];
+      }
+      
       this.renderizarConsultas();
     } catch (error) {
-      // silencioso
+      console.error('Erro ao carregar consultas:', error);
+      this.mostrarMensagem('erro', 'Erro ao carregar consultas');
     }
   },
 
@@ -131,15 +140,38 @@ const CONSULTAS_APP = {
       const tbody = document.createElement('tbody');
       
       consultas.forEach(c => {
-        const [anoAg, mesAg, diaAg] = c.data_agendamento.split('-');
-        const [anoC, mesC, diaC] = c.data_consulta.split('-');
+        // Formatar datas com segurança
+        let dataAg = '-';
+        let dataC = '-';
+        
+        if (c.data_agendamento) {
+          try {
+            const partes = c.data_agendamento.split('-');
+            if (partes.length === 3) {
+              dataAg = partes[2] + '/' + partes[1] + '/' + partes[0];
+            }
+          } catch (e) {
+            dataAg = c.data_agendamento;
+          }
+        }
+        
+        if (c.data_consulta) {
+          try {
+            const partes = c.data_consulta.split('-');
+            if (partes.length === 3) {
+              dataC = partes[2] + '/' + partes[1] + '/' + partes[0];
+            }
+          } catch (e) {
+            dataC = c.data_consulta;
+          }
+        }
 
         const row = document.createElement('tr');
-        row.innerHTML = '<td class="numero-col">#' + c.numero_pessoa + '</td>' +
-          '<td class="nome-col">' + c.nome + '</td>' +
+        row.innerHTML = '<td class="numero-col"><strong>#' + c.numero_pessoa + '</strong></td>' +
+          '<td class="nome-col">' + (c.nome || '-') + '</td>' +
           '<td class="tel-col">' + (c.telefone || '-') + '</td>' +
-          '<td class="data-col">' + diaAg + '/' + mesAg + '/' + anoAg + '</td>' +
-          '<td class="data-col"><strong>' + diaC + '/' + mesC + '/' + anoC + '</strong></td>' +
+          '<td class="data-col">' + dataAg + '</td>' +
+          '<td class="data-col"><strong>' + dataC + '</strong></td>' +
           '<td class="pagamento-col">' + (c.forma_pagamento || '-') + '</td>' +
           '<td class="valor-col">' + (c.valor ? 'R$ ' + c.valor.toFixed(2) : '-') + '</td>' +
           '<td class="notas-col">' + (c.notas || '-') + '</td>' +
@@ -162,7 +194,7 @@ const CONSULTAS_APP = {
       this.mostrarMensagem('sucesso', 'Deletado!');
       this.carregarConsultas();
     } catch (error) {
-      this.mostrarMensagem('erro', 'Erro');
+      this.mostrarMensagem('erro', 'Erro ao deletar');
     }
   },
 
@@ -182,7 +214,7 @@ const CONSULTAS_APP = {
         this.abrirRelatorio(dados);
       }
     } catch (error) {
-      this.mostrarMensagem('erro', 'Erro');
+      this.mostrarMensagem('erro', 'Erro ao gerar relatório');
     }
   },
 
