@@ -3,7 +3,6 @@ const CONSULTAS_APP = {
   API_URL: 'https://lembrete-gabriela.samuelvivi1996.workers.dev',
   consultas: [],
 
-  
   init() {
     this.btnConsultas = document.getElementById('btnConsultas');
     this.modalConsultas = document.getElementById('modalConsultas');
@@ -203,7 +202,7 @@ const CONSULTAS_APP = {
     // Criar abas
     chaves.forEach((chave, index) => {
       const grupo = porMes[chave];
-      const mesStr = this.nomeMes(grupo.mes) + '/' + grupo.ano;
+      const mesStr = grupo.mes + ' - ' + this.nomeMes(grupo.mes) + '/' + grupo.ano;
       
       const aba = document.createElement('button');
       aba.className = 'aba-mes-top';
@@ -782,4 +781,3 @@ const CONSULTAS_APP = {
 document.addEventListener('DOMContentLoaded', () => {
   CONSULTAS_APP.init();
 });
-
