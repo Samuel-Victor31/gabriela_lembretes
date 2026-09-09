@@ -82,7 +82,7 @@ const CONSULTAS_APP = {
     }
 
     const dados = {
-      mes: mesValue.toString().padStart(2, '0'),
+      mes: mesValue, // Já vem formatado como "09", "10", etc.
       ano: parseInt(anoValue),
       nome: document.getElementById('nomeConsulta').value.trim(),
       telefone: document.getElementById('telefoneConsulta').value.trim() || null,
@@ -153,6 +153,13 @@ const CONSULTAS_APP = {
     }
   },
 
+  nomeMes(numMes) {
+    const meses = ['', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const mes = parseInt(numMes);
+    return meses[mes] || numMes;
+  },
+
   renderizarConsultas() {
     const container = document.getElementById('containerConsultas');
     if (!container) return;
@@ -195,7 +202,7 @@ const CONSULTAS_APP = {
     // Criar abas
     chaves.forEach((chave, index) => {
       const grupo = porMes[chave];
-      const mesStr = grupo.mes + '/' + grupo.ano;
+      const mesStr = this.nomeMes(grupo.mes) + '/' + grupo.ano;
       
       const aba = document.createElement('button');
       aba.className = 'aba-mes-top';
