@@ -30,11 +30,35 @@ const CONSULTAS_APP = {
 
     const btnRelatorio = document.getElementById('btnGerarRelatorio');
     if (btnRelatorio) btnRelatorio.addEventListener('click', () => this.gerarRelatorio());
+    
+    // Observer para sincronizar dark mode em tempo real
+    const observer = new MutationObserver(() => {
+      if (this.modalConsultas.classList.contains('hidden')) return;
+      
+      if (document.body.classList.contains('dark-mode')) {
+        this.modalConsultas.classList.add('dark-mode');
+      } else {
+        this.modalConsultas.classList.remove('dark-mode');
+      }
+    });
+    
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class'],
+      subtree: false
+    });
   },
 
   abrirModal() {
     this.modalConsultas.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    
+    // Sincronizar dark mode do body com o modal
+    if (document.body.classList.contains('dark-mode')) {
+      this.modalConsultas.classList.add('dark-mode');
+    } else {
+      this.modalConsultas.classList.remove('dark-mode');
+    }
     
     // Pré-preencher data e mês SEMPRE com hoje (não apenas se vazio)
     const hoje = new Date();
@@ -66,6 +90,13 @@ const CONSULTAS_APP = {
   fecharModal() {
     this.modalConsultas.classList.add('hidden');
     document.body.style.overflow = 'auto';
+    
+    // Voltar scroll para topo
+    const container = document.getElementById('containerConsultas');
+    if (container) {
+      container.scrollTop = 0;
+    }
+    
     // NÃO resetar o formulário - manter os dados
   },
 
