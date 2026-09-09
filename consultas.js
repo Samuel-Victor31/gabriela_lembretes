@@ -3,7 +3,6 @@ const CONSULTAS_APP = {
   API_URL: 'https://lembrete-gabriela.samuelvivi1996.workers.dev',
   consultas: [],
 
-  
   init() {
     this.btnConsultas = document.getElementById('btnConsultas');
     this.modalConsultas = document.getElementById('modalConsultas');
@@ -148,17 +147,7 @@ const CONSULTAS_APP = {
     // Limpar container
     container.innerHTML = '';
     
-    // Criar tabela única com todas as consultas
-    const tabela = document.createElement('table');
-    tabela.className = 'tabela-consultas-unificada';
-    
-    const thead = document.createElement('thead');
-    thead.innerHTML = '<tr><th class="mes-col-header">Mês</th><th>#</th><th>Nome</th><th>Telefone</th><th>Agendamento</th><th>Consulta</th><th>Pagamento</th><th>Valor</th><th>Notas</th><th>Acao</th></tr>';
-    tabela.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-    
-    // Agrupar por mês para renderizar
+    // Agrupar por mês
     const porMes = {};
     this.consultas.forEach(c => {
       if (!c.ano || !c.mes) return;
@@ -176,12 +165,64 @@ const CONSULTAS_APP = {
     // Ordenar por ano/mês decrescente
     const chaves = Object.keys(porMes).sort().reverse();
     
-    chaves.forEach((chave, indexMes) => {
+    if (chaves.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>Nenhuma consulta registrada</p></div>';
+      return;
+    }
+
+    // Criar container de abas
+    const abasContainer = document.createElement('div');
+    abasContainer.className = 'abas-container';
+    
+    // Criar abas
+    chaves.forEach((chave, index) => {
       const grupo = porMes[chave];
       const mesStr = grupo.mes + '/' + grupo.ano;
       
-      grupo.consultas.forEach((c, indexConsulta) => {
-        // Formatar datas com segurança
+      const aba = document.createElement('button');
+      aba.className = 'aba-mes-top';
+      if (index === 0) aba.classList.add('aba-ativa');
+      aba.textContent = mesStr + ' (' + grupo.consultas.length + ')';
+      aba.setAttribute('data-mes', chave);
+      
+      aba.addEventListener('click', () => {
+        // Remover classe ativa de todas
+        document.querySelectorAll('.aba-mes-top').forEach(a => {
+          a.classList.remove('aba-ativa');
+        });
+        // Adicionar classe ativa nesta
+        aba.classList.add('aba-ativa');
+        
+        // Mostrar/esconder linhas
+        document.querySelectorAll('[data-mes-linha]').forEach(linha => {
+          linha.style.display = 'none';
+        });
+        document.querySelectorAll('[data-mes-linha="' + chave + '"]').forEach(linha => {
+          linha.style.display = '';
+        });
+      });
+      
+      abasContainer.appendChild(aba);
+    });
+    
+    container.appendChild(abasContainer);
+
+    // Criar tabela
+    const tabela = document.createElement('table');
+    tabela.className = 'tabela-consultas-com-abas';
+    
+    const thead = document.createElement('thead');
+    thead.innerHTML = '<tr><th>#</th><th>Nome</th><th>Telefone</th><th>Agendamento</th><th>Consulta</th><th>Pagamento</th><th>Valor</th><th>Notas</th><th>Acao</th></tr>';
+    tabela.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    
+    // Adicionar linhas de todas as consultas com atributo data-mes-linha
+    chaves.forEach((chave, indexMes) => {
+      const grupo = porMes[chave];
+      
+      grupo.consultas.forEach((c) => {
+        // Formatar datas
         let dataAg = '-';
         let dataC = '-';
         
@@ -208,16 +249,10 @@ const CONSULTAS_APP = {
         }
 
         const row = document.createElement('tr');
-        row.className = 'linha-consulta-unificada';
-        row.setAttribute('data-mes', chave);
+        row.setAttribute('data-mes-linha', chave);
+        if (indexMes > 0) row.style.display = 'none'; // Esconder linhas que não são do primeiro mês
         
-        // Mostrar mês apenas na primeira linha de cada mês com botão de expandir/colapsar
-        const mesCellContent = indexConsulta === 0 
-          ? '<strong style="cursor: pointer; user-select: none;" onclick="CONSULTAS_APP.toggleMes(\'' + chave + '\')">' + mesStr + ' <span class="toggle-mes">▼</span></strong>'
-          : '';
-        
-        row.innerHTML = '<td class="mes-col">' + mesCellContent + '</td>' +
-          '<td class="numero-col"><strong>#' + c.numero_pessoa + '</strong></td>' +
+        row.innerHTML = '<td class="numero-col"><strong>#' + c.numero_pessoa + '</strong></td>' +
           '<td class="nome-col">' + (c.nome || '-') + '</td>' +
           '<td class="tel-col">' + (c.telefone || '-') + '</td>' +
           '<td class="data-col">' + dataAg + '</td>' +
@@ -233,27 +268,6 @@ const CONSULTAS_APP = {
     
     tabela.appendChild(tbody);
     container.appendChild(tabela);
-  },
-
-  toggleMes(chave) {
-    const linhas = document.querySelectorAll('[data-mes="' + chave + '"]');
-    linhas.forEach(linha => {
-      if (linha.style.display === 'none') {
-        linha.style.display = '';
-      } else {
-        linha.style.display = 'none';
-      }
-    });
-    
-    // Girar ícone na primeira linha
-    const primeiraLinha = linhas[0];
-    if (primeiraLinha) {
-      const spanToggle = primeiraLinha.querySelector('.toggle-mes');
-      if (spanToggle) {
-        const textoAtual = spanToggle.textContent;
-        spanToggle.textContent = textoAtual === '▼' ? '▶' : '▼';
-      }
-    }
   },
 
   async deletarConsulta(id, ano, mes) {
