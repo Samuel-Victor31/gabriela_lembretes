@@ -36,27 +36,27 @@ const CONSULTAS_APP = {
     this.modalConsultas.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     
-    // Pré-preencher data e mês
+    // Pré-preencher data e mês apenas se estiverem vazios
     const hoje = new Date();
     const ano = hoje.getFullYear();
     const mes = String(hoje.getMonth() + 1).padStart(2, '0');
     const dia = String(hoje.getDate()).padStart(2, '0');
     
-    // Pré-preencher mês
+    // Pré-preencher mês se estiver vazio
     const mesInput = document.getElementById('mesConsulta');
-    if (mesInput) {
+    if (mesInput && !mesInput.value) {
       mesInput.value = mes;
     }
     
-    // Pré-preencher ano
+    // Pré-preencher ano se estiver vazio
     const anoInput = document.getElementById('anoConsulta');
-    if (anoInput) {
+    if (anoInput && !anoInput.value) {
       anoInput.value = ano;
     }
     
-    // Pré-preencher data de agendamento com hoje
+    // Pré-preencher data de agendamento se estiver vazia
     const dataAgInput = document.getElementById('dataAgendamento');
-    if (dataAgInput) {
+    if (dataAgInput && !dataAgInput.value) {
       dataAgInput.value = ano + '-' + mes + '-' + dia;
     }
     
@@ -66,6 +66,7 @@ const CONSULTAS_APP = {
   fecharModal() {
     this.modalConsultas.classList.add('hidden');
     document.body.style.overflow = 'auto';
+    // NÃO resetar o formulário - manter os dados
   },
 
   async adicionarConsulta(e) {
@@ -98,11 +99,20 @@ const CONSULTAS_APP = {
       const resultado = await response.json();
 
       if (response.ok) {
-        this.mostrarMensagem('sucesso', 'Consulta adicionada com sucesso!');
-        document.getElementById('formConsulta').reset();
+        this.mostrarMensagem('sucesso', 'Consulta #' + resultado.numero_pessoa + ' adicionada!');
+        
+        // Limpar apenas os campos de nome, telefone e notas
+        // Manter mês, ano e datas
+        document.getElementById('nomeConsulta').value = '';
+        document.getElementById('telefoneConsulta').value = '';
+        document.getElementById('notasConsulta').value = '';
+        document.getElementById('dataConsulta').value = '';
+        document.getElementById('formaPagamento').value = '';
+        document.getElementById('valorConsulta').value = '';
+        
         this.carregarConsultas();
       } else {
-        this.mostrarMensagem('erro', 'Erro ao adicionar');
+        this.mostrarMensagem('erro', 'Erro: ' + (resultado.erro || 'desconhecido'));
       }
     } catch (error) {
       this.mostrarMensagem('erro', 'Erro de conexão');
@@ -178,7 +188,7 @@ const CONSULTAS_APP = {
       // Conteúdo da tabela (inicialmente oculto, exceto o primeiro)
       const conteudo = document.createElement('div');
       conteudo.className = 'conteudo-mes-accordion';
-      conteudo.style.cssText = 'display: ' + (index === 0 ? 'block' : 'none') + '; overflow: hidden;';
+      conteudo.style.cssText = 'display: ' + (index === 0 ? 'block' : 'none') + '; overflow: hidden; overflow-x: auto;';
 
       const tabela = document.createElement('table');
       tabela.className = 'tabela-consultas';
@@ -326,7 +336,7 @@ const CONSULTAS_APP = {
         // Reorganizar números do mesmo mês/ano
         await this.reorganizarNumeros(ano, mes);
         
-        this.mostrarMensagem('sucesso', 'Consultoria deletada!');
+        this.mostrarMensagem('sucesso', 'Consultoria deletada e números atualizados!');
         this.carregarConsultas();
       } catch (error) {
         this.mostrarMensagem('erro', 'Erro ao deletar');
