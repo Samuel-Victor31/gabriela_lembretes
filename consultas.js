@@ -18,6 +18,21 @@ const CONSULTAS_APP = {
   adicionarEventos() {
     this.btnConsultas.addEventListener('click', () => this.abrirModal());
     
+    // Botão de Mensagens Rápidas da página principal
+    const btnMensagensRapidasMain = document.getElementById('btnMensagensRapidasMain');
+    if (btnMensagensRapidasMain) {
+      btnMensagensRapidasMain.addEventListener('click', () => {
+        this.abrirModal();
+        // Ativar aba de mensagens rápidas
+        setTimeout(() => {
+          document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+          document.getElementById('tabMensagensRapidas')?.classList.add('active');
+          document.querySelectorAll('.tab-button').forEach(e => e.classList.remove('active'));
+          document.getElementById('btnMensagensRapidas')?.classList.add('active');
+        }, 100);
+      });
+    }
+    
     const closeBtn = document.getElementById('closeConsultas');
     if (closeBtn) closeBtn.addEventListener('click', () => this.fecharModal());
 
