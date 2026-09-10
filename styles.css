@@ -2855,7 +2855,7 @@ body {
   gap: 0px;
   margin-bottom: 0px;
   padding: 12px 12px 8px 12px;
-  border-bottom: 2px solid #1a2b4a;
+  border-bottom: 2px solid #e0e0e0;
   background: transparent;
 }
 
@@ -2876,7 +2876,7 @@ body {
   margin-bottom: 10px;
   width: 100%;
   padding: 12px;
-  background: #1a2b4a;
+  background: #f5f7fa;
   border-radius: 4px;
 }
 
@@ -2885,8 +2885,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #2d3e5f;
-  border: 1px solid #3d4f6f;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 0px;
   font-size: 10px;
@@ -2894,7 +2894,7 @@ body {
   position: relative;
   width: 50px;
   height: 50px;
-  color: #fff;
+  color: #333;
 }
 
 .calendario-dia:hover:not(.calendario-dia-vazio) {
@@ -2909,7 +2909,7 @@ body {
 
 .calendario-dia-numero {
   font-weight: 700;
-  color: #fff;
+  color: #333;
   font-size: 14px;
   margin-bottom: 0px;
   line-height: 1;
@@ -2923,7 +2923,7 @@ body {
 }
 
 .calendario-com-lembrete .calendario-dia-numero {
-  color: #667eea;
+  color: #333 !important;
 }
 
 .calendario-quantidade {
