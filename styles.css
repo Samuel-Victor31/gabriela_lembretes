@@ -2802,8 +2802,9 @@ body {
   color: #b0b0b0 !important;
 }
 
+
 /* ============================================
-   CALENDÁRIO VISUAL DE LEMBRETES
+   CALENDÁRIO VISUAL - VERSÃO PROFISSIONAL
    ============================================ */
 
 .calendario-container {
@@ -2818,61 +2819,60 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  gap: 20px;
 }
 
 .calendario-mes-ano {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   color: #667eea;
+  text-align: center;
+  flex: 1;
 }
 
 .calendario-btn {
-  background: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 10px 18px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  font-size: 14px;
 }
 
 .calendario-btn:hover {
-  background: #764ba2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-#containerCalendario {
-  display: block;
-  width: 100%;
-}
-
-.calendario-header {
-  display: grid !important;
-  grid-template-columns: repeat(7, 1fr) !important;
-  gap: 5px !important;
-  margin-bottom: 10px !important;
-  width: 100% !important;
+.calendario-header-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e0e0e0;
 }
 
 .calendario-dia-semana {
   text-align: center;
-  font-weight: 600;
+  font-weight: 700;
   color: #667eea;
-  padding: 10px 0;
   font-size: 12px;
   text-transform: uppercase;
+  padding: 8px 0;
+  letter-spacing: 0.5px;
 }
 
-.calendario-dias {
+.calendario-grid-dias {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
   gap: 8px !important;
-  width: 100% !important;
-}
-
-.calendario-celula-vazia {
-  aspect-ratio: 1;
+  margin-bottom: 25px;
+  width: 100%;
 }
 
 .calendario-dia {
@@ -2885,53 +2885,243 @@ body {
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   padding: 8px;
-  font-size: 12px;
+  font-size: 13px;
   transition: all 0.3s ease;
   position: relative;
+  min-height: 60px;
 }
 
-.calendario-dia:hover {
-  transform: translateY(-2px);
+.calendario-dia:hover:not(.calendario-dia-vazio) {
+  transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.calendario-dia-vazio {
+  background: transparent;
+  border: none;
+}
+
 .calendario-dia-numero {
-  font-weight: 600;
+  font-weight: 700;
   color: #333;
-  margin-bottom: 2px;
-}
-
-.calendario-quantidade {
-  font-size: 11px;
-  background: #667eea;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.calendario-hoje {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-color: #667eea;
-}
-
-.calendario-hoje .calendario-dia-numero {
-  color: white;
+  font-size: 16px;
+  margin-bottom: 4px;
 }
 
 .calendario-com-lembrete {
-  background: #e3f2fd;
-  border-color: #667eea;
+  background: #e3f2fd !important;
+  border-color: #667eea !important;
 }
 
 .calendario-com-lembrete .calendario-dia-numero {
   color: #667eea;
 }
 
-/* Dark Mode */
+.calendario-quantidade {
+  background: #667eea;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+}
+
+.calendario-hoje {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-color: #667eea !important;
+}
+
+.calendario-hoje .calendario-dia-numero {
+  color: white;
+  font-size: 18px;
+}
+
+.calendario-hoje .calendario-quantidade {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+}
+
+.calendario-legenda {
+  background: #f9f9f9;
+  padding: 15px 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  margin-top: 20px;
+}
+
+.calendario-legenda-titulo {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.calendario-legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #555;
+}
+
+.calendario-legenda-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.calendario-legenda-hoje {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.calendario-legenda-lembrete {
+  background: #e3f2fd;
+  border: 2px solid #667eea;
+}
+
+.calendario-legenda-vazio {
+  background: #f5f7fa;
+  border: 2px solid #e0e0e0;
+}
+
+.calendario-legenda-info {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+}
+
+.modal-lembretes-dia {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2002;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-lembretes-conteudo {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-lembretes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.modal-lembretes-header h2 {
+  margin: 0;
+  color: #667eea;
+  font-size: 18px;
+}
+
+.modal-lembretes-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #667eea;
+}
+
+.modal-lembretes-close:hover {
+  transform: rotate(90deg);
+}
+
+.modal-lembretes-data {
+  color: #999;
+  font-size: 13px;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.modal-lembretes-divisor {
+  border-top: 1px solid #e0e0e0;
+  margin: 15px 0 20px 0;
+}
+
+.modal-lembretes-lista {
+  margin-bottom: 20px;
+}
+
+.modal-lembretes-card {
+  background: #f5f7fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  margin-bottom: 12px;
+}
+
+.modal-lembretes-nome {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.modal-lembretes-telefone {
+  font-size: 12px;
+  color: #667eea;
+  margin-bottom: 6px;
+}
+
+.modal-lembretes-descricao {
+  font-size: 13px;
+  color: #666;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.modal-lembretes-btn-fechar {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.modal-lembretes-btn-fechar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
 body.dark-mode .calendario-container {
-  background: #16213e;
+  background: #0f0f1e;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -2944,20 +3134,52 @@ body.dark-mode .calendario-dia-semana {
 }
 
 body.dark-mode .calendario-dia {
-  background: #0f0f1e;
+  background: #1a2a4e;
   border-color: #2d3561;
-  color: #ffffff;
 }
 
 body.dark-mode .calendario-dia-numero {
-  color: #ffffff;
+  color: #cccccc;
 }
 
 body.dark-mode .calendario-com-lembrete {
-  background: #1a2a4e;
-  border-color: #667eea;
+  background: #1a2a4e !important;
+  border-color: #667eea !important;
 }
 
+body.dark-mode .calendario-com-lembrete .calendario-dia-numero {
+  color: #667eea;
+}
+
+body.dark-mode .calendario-legenda {
+  background: #1a2a4e;
+  border-color: #2d3561;
+}
+
+body.dark-mode .calendario-legenda-titulo {
+  color: #ffffff;
+}
+
+body.dark-mode .calendario-legenda-item {
+  color: #aaaaaa;
+}
+
+body.dark-mode .modal-lembretes-conteudo {
+  background: #0f0f1e;
+  color: #cccccc;
+}
+
+body.dark-mode .modal-lembretes-card {
+  background: #1a2a4e;
+}
+
+body.dark-mode .modal-lembretes-nome {
+  color: #ffffff;
+}
+
+body.dark-mode .modal-lembretes-descricao {
+  color: #aaaaaa;
+}
 /* ============================================
    MENSAGENS RÁPIDAS
    ============================================ */
