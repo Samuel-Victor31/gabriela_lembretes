@@ -2,7 +2,6 @@
  * MENSAGENS RÁPIDAS
  * Sistema tipo WhatsApp para gerenciar mensagens pré-configuradas
  */
-
 const MENSAGENS_RAPIDAS = {
   API_URL: 'https://lembrete-gabriela.samuelvivi1996.workers.dev',
   mensagens: [],
