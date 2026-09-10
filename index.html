@@ -182,9 +182,6 @@
           <button class="tab-button" onclick="document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')); document.getElementById('tabRelatorio').classList.add('active'); document.querySelectorAll('.tab-button').forEach(e => e.classList.remove('active')); this.classList.add('active');">
             📊 Relatório
           </button>
-          <button class="tab-button" id="btnMensagensRapidas" onclick="document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')); document.getElementById('tabMensagensRapidas').classList.add('active'); document.querySelectorAll('.tab-button').forEach(e => e.classList.remove('active')); this.classList.add('active');">
-            💬 Mensagens Rápidas
-          </button>
         </div>
 
         <!-- Aba: Adicionar -->
@@ -316,11 +313,55 @@
           </p>
         </div>
 
-        <!-- Aba: Mensagens Rápidas -->
-        <div id="tabMensagensRapidas" class="tab-content">
-          <h3>💬 Mensagens Rápidas</h3>
+
+      </div>
+    </div>
+    <!-- ==================== FIM MODAL CONSULTAS ==================== -->
+
+    <!-- ==================== MODAL MENSAGENS RÁPIDAS ==================== -->
+    <div id="modalMensagensRapidas" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>💬 Mensagens Rápidas</h2>
+          <button class="modal-close" id="btnFecharMensagensRapidas">&times;</button>
+        </div>
+
+        <!-- Abas -->
+        <div class="modal-tabs">
+          <button class="modal-tab-button active" id="btnAbaMensagensLista">📋 Mensagens Cadastradas</button>
+          <button class="modal-tab-button" id="btnAbaCadastrarMensagem">➕ Cadastrar Mensagem</button>
+        </div>
+
+        <!-- Aba 1: Mensagens Cadastradas -->
+        <div id="abaListaMensagens" class="modal-tab-pane active">
+          <div class="mensagens-filters">
+            <input type="text" id="searchMensagens" placeholder="🔍 Buscar mensagens..." class="input-search">
+            
+            <select id="filterCategoria">
+              <option value="">📂 Todas as categorias</option>
+              <option value="Confirmação">Confirmação</option>
+              <option value="Agradecimento">Agradecimento</option>
+              <option value="Follow-up">Follow-up</option>
+              <option value="Promissória">Promissória</option>
+              <option value="Desconto">Desconto</option>
+              <option value="Outro">Outro</option>
+            </select>
+            
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="filtroFavoritos">
+              <span>⭐ Apenas Favoritos</span>
+            </label>
+          </div>
           
-          <!-- Adicionar Nova Mensagem -->
+          <div id="containerMensagens" class="container-mensagens-rapidas">
+            <div class="empty-state">
+              <p>📭 Carregando mensagens...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aba 2: Cadastrar Mensagem -->
+        <div id="abaCadastrarMensagem" class="modal-tab-pane">
           <div class="mensagens-form-section">
             <h4>➕ Criar Nova Mensagem</h4>
             <form id="formMensagem">
@@ -350,38 +391,11 @@
               <button type="submit" class="btn-submit-consulta">✅ Salvar Mensagem</button>
             </form>
           </div>
-          
-          <!-- Filtros e Busca -->
-          <div class="mensagens-filters">
-            <input type="text" id="searchMensagens" placeholder="🔍 Buscar mensagens..." class="input-search">
-            
-            <select id="filterCategoria">
-              <option value="">📂 Todas as categorias</option>
-              <option value="Confirmação">Confirmação</option>
-              <option value="Agradecimento">Agradecimento</option>
-              <option value="Follow-up">Follow-up</option>
-              <option value="Promissória">Promissória</option>
-              <option value="Desconto">Desconto</option>
-              <option value="Outro">Outro</option>
-            </select>
-            
-            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-              <input type="checkbox" id="filtroFavoritos">
-              <span>⭐ Apenas Favoritos</span>
-            </label>
-          </div>
-          
-          <!-- Lista de Mensagens -->
-          <div id="containerMensagens" class="container-mensagens-rapidas">
-            <div class="empty-state">
-              <p>📭 Carregando mensagens...</p>
-            </div>
-          </div>
         </div>
-
       </div>
     </div>
-    <!-- ==================== FIM MODAL CONSULTAS ==================== -->
+    <!-- ==================== FIM MODAL MENSAGENS RÁPIDAS ==================== -->
+
 
     <!-- Seção de Lembretes do Dia (se quiser manter) -->
     <section class="lembretes-section">
@@ -416,5 +430,3 @@
   <script src="mensagens-rapidas.js"></script>
 </body>
 </html>
-
-
