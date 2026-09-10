@@ -177,11 +177,18 @@ const CONSULTAS_APP = {
   async carregarConsultas() {
     try {
       const response = await fetch(this.API_URL + '/api/consultas');
-      this.consultas = await response.json();
+      let consultas = await response.json();
       
-      if (!Array.isArray(this.consultas)) {
-        this.consultas = [];
+      if (!Array.isArray(consultas)) {
+        consultas = [];
       }
+      
+      // Normalizar mês: garantir que sempre tenha 2 dígitos com padStart
+      this.consultas = consultas.map(c => ({
+        ...c,
+        mes: String(c.mes).padStart(2, '0'),
+        ano: parseInt(c.ano)
+      }));
       
       this.renderizarConsultas();
     } catch (error) {
