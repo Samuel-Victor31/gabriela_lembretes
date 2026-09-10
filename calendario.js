@@ -205,20 +205,22 @@ const CALENDARIO = {
   abrirFormularioComData(data) {
     if (!window.APP) return;
     
-    // Formatar data para YYYY-MM-DD (sem timezone)
-    const ano = data.getFullYear();
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const dia = String(data.getDate()).padStart(2, '0');
-    const dataFormatada = `${ano}-${mes}-${dia}`;
-    
-    // Preencher o input de data
-    const inputData = document.getElementById('data');
-    if (inputData) {
-      inputData.value = dataFormatada;
-    }
-    
-    // Abrir o modal de adicionar lembrete
+    // Abrir o modal de adicionar lembrete primeiro
     window.APP.abrirModal();
+    
+    // Depois preencher a data (após o reset do modal)
+    setTimeout(() => {
+      const ano = data.getFullYear();
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const dia = String(data.getDate()).padStart(2, '0');
+      const dataFormatada = `${ano}-${mes}-${dia}`;
+      
+      const inputData = document.getElementById('data');
+      if (inputData) {
+        inputData.value = dataFormatada;
+        console.log('Data preenchida:', dataFormatada);
+      }
+    }, 50);
   },
   
   mostrarLembretesDoDia(data) {
