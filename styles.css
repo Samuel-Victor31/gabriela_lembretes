@@ -2810,7 +2810,7 @@ body {
 .calendario-container {
   background: white;
   border-radius: 12px;
-  padding: 14px;
+  padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin: 20px auto;
   max-width: 430px;
@@ -2854,8 +2854,9 @@ body {
   grid-template-columns: repeat(7, 1fr);
   gap: 0px;
   margin-bottom: 0px;
-  padding-bottom: 8px;
+  padding: 12px 12px 8px 12px;
   border-bottom: 2px solid #1a2b4a;
+  background: transparent;
 }
 
 .calendario-dia-semana {
@@ -2874,6 +2875,9 @@ body {
   gap: 0px !important;
   margin-bottom: 10px;
   width: 100%;
+  padding: 12px;
+  background: #f5f7fa;
+  border-radius: 4px;
 }
 
 .calendario-dia {
