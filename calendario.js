@@ -1,29 +1,43 @@
 /**
- * CALENDÁRIO VISUAL DE LEMBRETES
- * Mostra dias com lembretes e quantidade
+ * CALENDÁRIO VISUAL DE LEMBRETES - VERSÃO PROFISSIONAL
+ * Mostra dias com lembretes, navegação e legenda
  */
 
 const CALENDARIO = {
-  mesAtual: new Date().getMonth(),
+  mesAtual: new Date().getMonth() + 1,
   anoAtual: new Date().getFullYear(),
-  hoje: new Date().getDate(),
+  
+  nomesMeses: [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ],
+  
+  nomesDosSemana: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
   
   init() {
-    this.btnAnterior = document.getElementById('btnMesAnterior');
-    this.btnProximo = document.getElementById('btnMesProximo');
-    this.containerCalendario = document.getElementById('containerCalendario');
+    this.container = document.getElementById('containerCalendario');
+    this.btnMesAnterior = document.getElementById('btnMesAnterior');
+    this.btnMesProximo = document.getElementById('btnMesProximo');
     this.mesAnoDisplay = document.getElementById('mesAnoDisplay');
     
-    if (this.btnAnterior) this.btnAnterior.addEventListener('click', () => this.irMesAnterior());
-    if (this.btnProximo) this.btnProximo.addEventListener('click', () => this.irMesProximo());
+    if (!this.container) return;
     
+    // Event listeners
+    if (this.btnMesAnterior) {
+      this.btnMesAnterior.addEventListener('click', () => this.irMesAnterior());
+    }
+    if (this.btnMesProximo) {
+      this.btnMesProximo.addEventListener('click', () => this.irMesProximo());
+    }
+    
+    // Renderizar calendário
     this.renderizar();
   },
   
   irMesAnterior() {
     this.mesAtual--;
-    if (this.mesAtual < 0) {
-      this.mesAtual = 11;
+    if (this.mesAtual < 1) {
+      this.mesAtual = 12;
       this.anoAtual--;
     }
     this.renderizar();
@@ -31,137 +45,242 @@ const CALENDARIO = {
   
   irMesProximo() {
     this.mesAtual++;
-    if (this.mesAtual > 11) {
-      this.mesAtual = 0;
+    if (this.mesAtual > 12) {
+      this.mesAtual = 1;
       this.anoAtual++;
     }
     this.renderizar();
   },
   
   renderizar() {
+    if (!this.container) return;
+    
+    // Limpar
+    this.container.innerHTML = '';
+    
     // Atualizar título
-    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     if (this.mesAnoDisplay) {
-      this.mesAnoDisplay.textContent = meses[this.mesAtual] + ' ' + this.anoAtual;
+      this.mesAnoDisplay.textContent = `${this.nomesMeses[this.mesAtual - 1]} ${this.anoAtual}`;
     }
     
-    // Limpar container
-    if (this.containerCalendario) {
-      this.containerCalendario.innerHTML = '';
-    }
+    // Criar cabeçalho com dias da semana
+    const headerDias = document.createElement('div');
+    headerDias.className = 'calendario-header-dias';
     
-    // Criar headers dos dias da semana
-    const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
-    const headerContainer = document.createElement('div');
-    headerContainer.className = 'calendario-header';
-    diasSemana.forEach(dia => {
-      const header = document.createElement('div');
-      header.className = 'calendario-dia-semana';
-      header.textContent = dia;
-      headerContainer.appendChild(header);
+    this.nomesDosSemana.forEach(dia => {
+      const diaEl = document.createElement('div');
+      diaEl.className = 'calendario-dia-semana';
+      diaEl.textContent = dia;
+      headerDias.appendChild(diaEl);
     });
-    if (this.containerCalendario) {
-      this.containerCalendario.appendChild(headerContainer);
+    
+    this.container.appendChild(headerDias);
+    
+    // Criar grid de dias
+    const gridDias = document.createElement('div');
+    gridDias.className = 'calendario-grid-dias';
+    
+    // Primeira data do mês
+    const primeiroDia = new Date(this.anoAtual, this.mesAtual - 1, 1);
+    const ultimoDia = new Date(this.anoAtual, this.mesAtual, 0);
+    const diaSemanaInicio = primeiroDia.getDay();
+    const diasNoMes = ultimoDia.getDate();
+    
+    // Dias em branco do mês anterior
+    for (let i = 0; i < diaSemanaInicio; i++) {
+      const vazio = document.createElement('div');
+      vazio.className = 'calendario-dia calendario-dia-vazio';
+      gridDias.appendChild(vazio);
     }
     
-    // Obter primeiro dia do mês
-    const primeiroDia = new Date(this.anoAtual, this.mesAtual, 1).getDay();
-    const ultimoDia = new Date(this.anoAtual, this.mesAtual + 1, 0).getDate();
-    
-    // Criar células vazias antes do primeiro dia
-    const diasContainer = document.createElement('div');
-    diasContainer.className = 'calendario-dias';
-    
-    for (let i = 0; i < primeiroDia; i++) {
-      const celulaVazia = document.createElement('div');
-      celulaVazia.className = 'calendario-celula-vazia';
-      diasContainer.appendChild(celulaVazia);
-    }
-    
-    // Criar células dos dias
-    for (let dia = 1; dia <= ultimoDia; dia++) {
-      const celula = document.createElement('div');
-      celula.className = 'calendario-dia';
+    // Dias do mês
+    for (let dia = 1; dia <= diasNoMes; dia++) {
+      const diaEl = document.createElement('div');
+      diaEl.className = 'calendario-dia';
       
-      // Contar lembretes para este dia
-      const dataAtual = new Date(this.anoAtual, this.mesAtual, dia);
-      const lembretesDoDia = this.contar
-Lembretes(dataAtual);
+      const dataObj = new Date(this.anoAtual, this.mesAtual - 1, dia);
       
-      // Marcar como hoje
-      if (dia === this.hoje && this.mesAtual === new Date().getMonth() && this.anoAtual === new Date().getFullYear()) {
-        celula.classList.add('calendario-hoje');
+      // Verificar se é hoje
+      const ehHoje = this.ehHoje(dataObj);
+      if (ehHoje) {
+        diaEl.classList.add('calendario-hoje');
       }
       
-      // Adicionar conteúdo
-      if (lembretesDoDia > 0) {
-        celula.classList.add('calendario-com-lembrete');
-        celula.innerHTML = `
-          <div class="calendario-dia-numero">${dia}</div>
-          <div class="calendario-quantidade">${lembretesDoDia}</div>
-        `;
-        celula.style.cursor = 'pointer';
-        celula.addEventListener('click', () => this.mostrarLembretesDoDia(dataAtual));
-      } else {
-        celula.innerHTML = `<div class="calendario-dia-numero">${dia}</div>`;
+      // Contar lembretes
+      const lembretes = this.contarLembretes(dataObj);
+      const temLembretes = lembretes > 0;
+      
+      if (temLembretes) {
+        diaEl.classList.add('calendario-com-lembrete');
       }
       
-      diasContainer.appendChild(celula);
+      // Conteúdo do dia
+      diaEl.innerHTML = `
+        <div class="calendario-dia-numero">${dia}</div>
+        ${temLembretes ? `<div class="calendario-quantidade">${lembretes}</div>` : ''}
+      `;
+      
+      // Click para ver detalhes
+      if (temLembretes) {
+        diaEl.style.cursor = 'pointer';
+        diaEl.addEventListener('click', () => this.mostrarLembretesDoDia(dataObj));
+      }
+      
+      gridDias.appendChild(diaEl);
     }
     
-    if (this.containerCalendario) {
-      this.containerCalendario.appendChild(diasContainer);
-    }
+    this.container.appendChild(gridDias);
+    
+    // Adicionar legenda
+    this.adicionarLegenda();
+  },
+  
+  adicionarLegenda() {
+    const legenda = document.createElement('div');
+    legenda.className = 'calendario-legenda';
+    
+    const legendaTitulo = document.createElement('div');
+    legendaTitulo.className = 'calendario-legenda-titulo';
+    legendaTitulo.textContent = '📋 Legenda:';
+    legenda.appendChild(legendaTitulo);
+    
+    // Item 1: Hoje
+    const item1 = document.createElement('div');
+    item1.className = 'calendario-legenda-item';
+    item1.innerHTML = `
+      <div class="calendario-legenda-box calendario-legenda-hoje"></div>
+      <span>= Dia de Hoje</span>
+    `;
+    legenda.appendChild(item1);
+    
+    // Item 2: Com lembretes
+    const item2 = document.createElement('div');
+    item2.className = 'calendario-legenda-item';
+    item2.innerHTML = `
+      <div class="calendario-legenda-box calendario-legenda-lembrete"></div>
+      <span>= Com Lembretes</span>
+    `;
+    legenda.appendChild(item2);
+    
+    // Item 3: Sem lembretes
+    const item3 = document.createElement('div');
+    item3.className = 'calendario-legenda-item';
+    item3.innerHTML = `
+      <div class="calendario-legenda-box calendario-legenda-vazio"></div>
+      <span>= Sem Lembretes</span>
+    `;
+    legenda.appendChild(item3);
+    
+    // Info
+    const info = document.createElement('div');
+    info.className = 'calendario-legenda-info';
+    info.innerHTML = `✨ Clique em um dia com lembretes para ver detalhes`;
+    legenda.appendChild(info);
+    
+    this.container.appendChild(legenda);
+  },
+  
+  ehHoje(data) {
+    const hoje = new Date();
+    return data.getDate() === hoje.getDate() &&
+           data.getMonth() === hoje.getMonth() &&
+           data.getFullYear() === hoje.getFullYear();
   },
   
   contarLembretes(data) {
     if (!window.APP || !window.APP.lembretes) return 0;
     
-    const dataFormatada = data.toISOString().split('T')[0];
-    return window.APP.lembretes.filter(l => l.data === dataFormatada).length;
+    const dataStr = data.toISOString().split('T')[0];
+    return window.APP.lembretes.filter(l => l.data === dataStr).length;
   },
   
   mostrarLembretesDoDia(data) {
     if (!window.APP || !window.APP.lembretes) return;
     
-    const dataFormatada = data.toISOString().split('T')[0];
-    const lembretesDoDia = window.APP.lembretes.filter(l => l.data === dataFormatada);
+    const dataStr = data.toISOString().split('T')[0];
+    const lembretesDodia = window.APP.lembretes.filter(l => l.data === dataStr);
     
-    if (lembretesDoDia.length === 0) return;
+    if (lembretesDodia.length === 0) return;
     
-    // Criar modal com lembretes do dia
-    const modal = document.createElement('div');
-    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000;';
-    
-    const conteudo = document.createElement('div');
-    conteudo.style.cssText = 'background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; max-height: 80vh; overflow: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3);';
-    
-    const titulo = document.createElement('h2');
-    titulo.textContent = 'Lembretes de ' + data.toLocaleDateString('pt-BR');
-    titulo.style.cssText = 'color: #667eea; margin-top: 0; margin-bottom: 20px;';
-    conteudo.appendChild(titulo);
-    
-    lembretesDoDia.forEach((lembrete, index) => {
-      const card = document.createElement('div');
-      card.style.cssText = 'padding: 15px; background: #f5f7fa; border-left: 4px solid #667eea; margin-bottom: 15px; border-radius: 6px;';
-      
-      card.innerHTML = `
-        <div style="font-weight: 600; color: #333; margin-bottom: 5px;">${lembrete.nome || '(sem nome)'}</div>
-        <div style="font-size: 12px; color: #999; margin-bottom: 5px;">${lembrete.telefone || '(sem telefone)'}</div>
-        <div style="font-size: 14px; color: #555;">${lembrete.descricao || '(sem descrição)'}</div>
-      `;
-      conteudo.appendChild(card);
+    const dataFormatada = data.toLocaleDateString('pt-BR', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
     
+    // Criar modal
+    const modal = document.createElement('div');
+    modal.className = 'modal-lembretes-dia';
+    
+    const conteudo = document.createElement('div');
+    conteudo.className = 'modal-lembretes-conteudo';
+    
+    // Header
+    const header = document.createElement('div');
+    header.className = 'modal-lembretes-header';
+    header.innerHTML = `
+      <h2>📅 Lembretes do Dia</h2>
+      <button class="modal-lembretes-close">&times;</button>
+    `;
+    conteudo.appendChild(header);
+    
+    // Data
+    const dataElem = document.createElement('p');
+    dataElem.className = 'modal-lembretes-data';
+    dataElem.textContent = dataFormatada;
+    conteudo.appendChild(dataElem);
+    
+    // Divisor
+    const divisor = document.createElement('div');
+    divisor.className = 'modal-lembretes-divisor';
+    conteudo.appendChild(divisor);
+    
+    // Lista de lembretes
+    const lista = document.createElement('div');
+    lista.className = 'modal-lembretes-lista';
+    
+    lembretesDodia.forEach((lembrete) => {
+      const card = document.createElement('div');
+      card.className = 'modal-lembretes-card';
+      
+      let html = `<div class="modal-lembretes-nome">${lembrete.nome || '(Sem nome)'}</div>`;
+      
+      if (lembrete.telefone) {
+        html += `<div class="modal-lembretes-telefone">📱 ${lembrete.telefone}</div>`;
+      }
+      
+      if (lembrete.descricao) {
+        html += `<div class="modal-lembretes-descricao">"${lembrete.descricao}"</div>`;
+      }
+      
+      card.innerHTML = html;
+      lista.appendChild(card);
+    });
+    
+    conteudo.appendChild(lista);
+    
+    // Botão fechar
     const btnFechar = document.createElement('button');
+    btnFechar.className = 'modal-lembretes-btn-fechar';
     btnFechar.textContent = 'Fechar';
-    btnFechar.style.cssText = 'width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 20px;';
-    btnFechar.onclick = () => modal.remove();
     conteudo.appendChild(btnFechar);
     
     modal.appendChild(conteudo);
     document.body.appendChild(modal);
+    
+    // Dark mode
+    if (document.body.classList.contains('dark-mode')) {
+      conteudo.classList.add('dark-mode');
+    }
+    
+    // Eventos
+    const fechar = () => modal.remove();
+    conteudo.querySelector('.modal-lembretes-close').addEventListener('click', fechar);
+    btnFechar.addEventListener('click', fechar);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) fechar();
+    });
   }
 };
 
@@ -171,3 +290,6 @@ if (document.readyState === 'loading') {
 } else {
   CALENDARIO.init();
 }
+
+// Expor globalmente
+window.CALENDARIO = CALENDARIO;
