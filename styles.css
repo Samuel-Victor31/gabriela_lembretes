@@ -2810,21 +2810,22 @@ body {
 .calendario-container {
   background: white;
   border-radius: 12px;
-  padding: 8px;
+  padding: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
+  margin: 20px auto;
+  max-width: 500px;
 }
 
 .calendario-header-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   gap: 10px;
 }
 
 .calendario-mes-ano {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: #667eea;
   text-align: center;
@@ -2835,12 +2836,12 @@ body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  padding: 4px 10px;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .calendario-btn:hover {
@@ -2851,9 +2852,9 @@ body {
 .calendario-header-dias {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
-  margin-bottom: 4px;
-  padding-bottom: 4px;
+  gap: 1px;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -2861,35 +2862,34 @@ body {
   text-align: center;
   font-weight: 700;
   color: #667eea;
-  font-size: 9px;
+  font-size: 10px;
   text-transform: uppercase;
-  padding: 2px 0;
-  letter-spacing: 0.2px;
+  padding: 4px 0;
+  letter-spacing: 0.3px;
 }
 
 .calendario-grid-dias {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
-  gap: 2px !important;
-  margin-bottom: 8px;
+  gap: 1px !important;
+  margin-bottom: 10px;
   width: 100%;
 }
 
 .calendario-dia {
-  aspect-ratio: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   background: #f5f7fa;
   border: 1px solid #e0e0e0;
-  border-radius: 2px;
-  padding: 0px;
-  font-size: 7px;
+  border-radius: 4px;
+  padding: 2px;
+  font-size: 8px;
   transition: all 0.3s ease;
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
 }
 
 .calendario-dia:hover:not(.calendario-dia-vazio) {
@@ -2905,7 +2905,7 @@ body {
 .calendario-dia-numero {
   font-weight: 700;
   color: #333;
-  font-size: 7px;
+  font-size: 9px;
   margin-bottom: 0px;
   line-height: 1;
 }
@@ -2922,11 +2922,11 @@ body {
 .calendario-quantidade {
   background: #667eea;
   color: white;
-  padding: 0px 1px;
+  padding: 0px 2px;
   border-radius: 1px;
-  font-size: 5px;
+  font-size: 6px;
   font-weight: 700;
-  min-width: 10px;
+  min-width: 11px;
   text-align: center;
   line-height: 1;
 }
@@ -2938,7 +2938,7 @@ body {
 
 .calendario-hoje .calendario-dia-numero {
   color: white;
-  font-size: 7px;
+  font-size: 9px;
 }
 
 .calendario-hoje .calendario-quantidade {
@@ -2948,31 +2948,31 @@ body {
 
 .calendario-legenda {
   background: #f9f9f9;
-  padding: 6px 8px;
+  padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .calendario-legenda-titulo {
   font-weight: 700;
   color: #333;
-  margin-bottom: 4px;
-  font-size: 11px;
+  margin-bottom: 6px;
+  font-size: 12px;
 }
 
 .calendario-legenda-item {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 3px;
-  font-size: 9px;
+  margin-bottom: 4px;
+  font-size: 10px;
   color: #555;
 }
 
 .calendario-legenda-box {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 2px;
   flex-shrink: 0;
 }
@@ -2992,10 +2992,10 @@ body {
 }
 
 .calendario-legenda-info {
-  margin-top: 4px;
-  padding-top: 4px;
+  margin-top: 6px;
+  padding-top: 6px;
   border-top: 1px solid #e0e0e0;
-  font-size: 9px;
+  font-size: 10px;
   color: #999;
   font-style: italic;
 }
