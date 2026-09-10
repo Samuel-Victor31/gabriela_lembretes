@@ -258,6 +258,11 @@ const APP = {
         const card = this.criarCardLembreteDoDia(lembrete);
         this.containerLembretes.appendChild(card);
       });
+      
+      // Atualizar calendário
+      if (window.CALENDARIO) {
+        window.CALENDARIO.renderizar();
+      }
     } catch (error) {
       console.error('Erro ao carregar lembretes:', error);
       this.mostrarMensagem('erro', '❌ Erro ao conectar');
@@ -490,6 +495,11 @@ const APP = {
       });
 
       this.renderizarLembretesVerificar();
+      
+      // Atualizar calendário com todos os lembretes
+      if (window.CALENDARIO) {
+        window.CALENDARIO.renderizar();
+      }
     } catch (error) {
       console.error('Erro ao carregar lembretes:', error);
       container.innerHTML = `
@@ -830,4 +840,6 @@ const APP = {
 // Inicializar quando o DOM está pronto
 document.addEventListener('DOMContentLoaded', () => {
   APP.init();
+  // Expor globalmente para outros scripts (calendário)
+  window.APP = APP;
 });
