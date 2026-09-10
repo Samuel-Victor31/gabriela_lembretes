@@ -263,7 +263,7 @@ const APP = {
         this.containerLembretes.appendChild(card);
       });
       
-      // Atualizar calendário
+      // Atualizar calendário com os lembretes carregados
       if (window.CALENDARIO) {
         window.CALENDARIO.renderizar();
       }
