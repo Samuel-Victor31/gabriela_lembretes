@@ -216,16 +216,22 @@ const CONSULTAS_APP = {
     // Limpar container
     container.innerHTML = '';
     
-    // Agrupar por mês
+    // Agrupar por mês de AGENDAMENTO (extrair da data_agendamento)
     const porMes = {};
     this.consultas.forEach(c => {
-      if (!c.ano || !c.mes) return;
-      // Garantir que mês sempre tem 2 dígitos para ordenação correta
-      const mesFormatado = String(c.mes).padStart(2, '0');
-      const chave = c.ano + '-' + mesFormatado;
+      if (!c.data_agendamento) return;
+      
+      // Extrair ano/mês da data_agendamento (YYYY-MM-DD)
+      const [anoAg, mesAg] = c.data_agendamento.split('-');
+      
+      if (!anoAg || !mesAg) return;
+      
+      const mesFormatado = String(mesAg).padStart(2, '0');
+      const chave = anoAg + '-' + mesFormatado;
+      
       if (!porMes[chave]) {
         porMes[chave] = {
-          ano: c.ano,
+          ano: anoAg,
           mes: mesFormatado,
           consultas: []
         };
