@@ -253,17 +253,16 @@ const APP = {
           <p class="empty-text">Clique em "Verificar Lembretes" para ver todos</p>
         `;
         this.containerLembretes.appendChild(emptyDiv);
-        return;
+      } else {
+        this.containerLembretes.innerHTML = '';
+
+        lembretesHoje.forEach(lembrete => {
+          const card = this.criarCardLembreteDoDia(lembrete);
+          this.containerLembretes.appendChild(card);
+        });
       }
-
-      this.containerLembretes.innerHTML = '';
-
-      lembretesHoje.forEach(lembrete => {
-        const card = this.criarCardLembreteDoDia(lembrete);
-        this.containerLembretes.appendChild(card);
-      });
       
-      // Atualizar calendário com os lembretes carregados
+      // Atualizar calendário sempre (com ou sem lembretes de hoje)
       if (window.CALENDARIO) {
         window.CALENDARIO.renderizar();
       }
