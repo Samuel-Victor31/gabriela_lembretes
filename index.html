@@ -11,7 +11,7 @@
     <!-- Header com Toggle Dark/Light -->
     <header class="header">
       <div class="header-content">
-        <h1 class="welcome-title">Bem-vindo, Gabriela! </h1>
+        <h1 class="welcome-title">Bem-vindo, Gabriela! 👋</h1>
         <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">🌙</button>
       </div>
       <p class="daily-message" id="dailyMessage"></p>
@@ -326,11 +326,22 @@
         </div>
       </div>
     </section>
+
+    <!-- CALENDÁRIO VISUAL DE LEMBRETES -->
+    <section class="calendario-container">
+      <div class="calendario-header-nav">
+        <button id="btnMesAnterior" class="calendario-btn">← Anterior</button>
+        <h2 class="calendario-mes-ano" id="mesAnoDisplay">Setembro 2026</h2>
+        <button id="btnMesProximo" class="calendario-btn">Próximo →</button>
+      </div>
+      <div id="containerCalendario"></div>
+    </section>
   </div>
 
   <script src="mensagens.js"></script>
   <script src="main.js"></script>
   <script src="scroll-gradient.js"></script>
   <script src="consultas.js"></script>
+  <script src="calendario.js"></script>
 </body>
 </html>
