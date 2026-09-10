@@ -122,11 +122,17 @@ const CALENDARIO = {
         ${temLembretes ? `<div class="calendario-quantidade">${lembretes}</div>` : ''}
       `;
       
-      // Click para ver detalhes
-      if (temLembretes) {
-        diaEl.style.cursor = 'pointer';
-        diaEl.addEventListener('click', () => this.mostrarLembretesDoDia(dataObj));
-      }
+      // Click para adicionar lembrete com data selecionada
+      diaEl.style.cursor = 'pointer';
+      diaEl.addEventListener('click', (e) => {
+        // Se clicou no badge, mostrar lembretes
+        if (e.target.classList.contains('calendario-quantidade')) {
+          this.mostrarLembretesDoDia(dataObj);
+        } else {
+          // Se clicou no dia, abrir formulário com data
+          this.abrirFormularioComData(dataObj);
+        }
+      });
       
       gridDias.appendChild(diaEl);
     }
@@ -194,6 +200,25 @@ const CALENDARIO = {
     
     const dataStr = data.toISOString().split('T')[0];
     return window.APP.lembretes.filter(l => l.data === dataStr).length;
+  },
+  
+  abrirFormularioComData(data) {
+    if (!window.APP) return;
+    
+    // Formatar data para YYYY-MM-DD (sem timezone)
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dia = String(data.getDate()).padStart(2, '0');
+    const dataFormatada = `${ano}-${mes}-${dia}`;
+    
+    // Preencher o input de data
+    const inputData = document.getElementById('data');
+    if (inputData) {
+      inputData.value = dataFormatada;
+    }
+    
+    // Abrir o modal de adicionar lembrete
+    window.APP.abrirModal();
   },
   
   mostrarLembretesDoDia(data) {
