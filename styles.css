@@ -3123,6 +3123,25 @@ body {
   margin-top: 8px;
 }
 
+.modal-lembretes-btn-adicionar {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  margin-bottom: 8px;
+}
+
+.modal-lembretes-btn-adicionar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
+}
+
 .modal-lembretes-btn-fechar {
   width: 100%;
   padding: 12px;
