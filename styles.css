@@ -3165,6 +3165,14 @@ body.dark-mode .calendario-container {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+body.dark-mode .calendario-grid-dias {
+  background: #0d1929;
+}
+
+body.dark-mode .calendario-header-dias {
+  border-bottom-color: #2d3561;
+}
+
 body.dark-mode .calendario-mes-ano {
   color: #667eea;
 }
@@ -3176,10 +3184,11 @@ body.dark-mode .calendario-dia-semana {
 body.dark-mode .calendario-dia {
   background: #1a2a4e;
   border-color: #2d3561;
+  color: #fff;
 }
 
 body.dark-mode .calendario-dia-numero {
-  color: #cccccc;
+  color: #fff;
 }
 
 body.dark-mode .calendario-com-lembrete {
@@ -3188,7 +3197,16 @@ body.dark-mode .calendario-com-lembrete {
 }
 
 body.dark-mode .calendario-com-lembrete .calendario-dia-numero {
-  color: #667eea;
+  color: #fff;
+}
+
+body.dark-mode .calendario-hoje {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-color: #667eea !important;
+}
+
+body.dark-mode .calendario-hoje .calendario-dia-numero {
+  color: white !important;
 }
 
 body.dark-mode .calendario-legenda {
