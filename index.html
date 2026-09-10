@@ -178,6 +178,9 @@
           <button class="tab-button" onclick="document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')); document.getElementById('tabRelatorio').classList.add('active'); document.querySelectorAll('.tab-button').forEach(e => e.classList.remove('active')); this.classList.add('active');">
             📊 Relatório
           </button>
+          <button class="tab-button" id="btnMensagensRapidas" onclick="document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')); document.getElementById('tabMensagensRapidas').classList.add('active'); document.querySelectorAll('.tab-button').forEach(e => e.classList.remove('active')); this.classList.add('active');">
+            💬 Mensagens Rápidas
+          </button>
         </div>
 
         <!-- Aba: Adicionar -->
@@ -309,6 +312,69 @@
           </p>
         </div>
 
+        <!-- Aba: Mensagens Rápidas -->
+        <div id="tabMensagensRapidas" class="tab-content">
+          <h3>💬 Mensagens Rápidas</h3>
+          
+          <!-- Adicionar Nova Mensagem -->
+          <div class="mensagens-form-section">
+            <h4>➕ Criar Nova Mensagem</h4>
+            <form id="formMensagem">
+              <div class="form-group">
+                <label for="tituloMensagem">Título da Mensagem:</label>
+                <input type="text" id="tituloMensagem" placeholder="Ex: Confirmação de Agendamento" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="conteudoMensagem">Conteúdo:</label>
+                <textarea id="conteudoMensagem" placeholder="Use {nome_cliente}, {data}, {hora}, {telefone} para placeholders" required></textarea>
+                <small style="color: #999; display: block; margin-top: 5px;">📝 Dica: Use placeholders como {nome_cliente}, {data}, {hora}, {telefone}</small>
+              </div>
+              
+              <div class="form-group">
+                <label for="categoriaMensagem">Categoria:</label>
+                <select id="categoriaMensagem">
+                  <option value="Confirmação">Confirmação</option>
+                  <option value="Agradecimento">Agradecimento</option>
+                  <option value="Follow-up">Follow-up</option>
+                  <option value="Promissória">Promissória</option>
+                  <option value="Desconto">Desconto</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+              
+              <button type="submit" class="btn-submit-consulta">✅ Salvar Mensagem</button>
+            </form>
+          </div>
+          
+          <!-- Filtros e Busca -->
+          <div class="mensagens-filters">
+            <input type="text" id="searchMensagens" placeholder="🔍 Buscar mensagens..." class="input-search">
+            
+            <select id="filterCategoria">
+              <option value="">📂 Todas as categorias</option>
+              <option value="Confirmação">Confirmação</option>
+              <option value="Agradecimento">Agradecimento</option>
+              <option value="Follow-up">Follow-up</option>
+              <option value="Promissória">Promissória</option>
+              <option value="Desconto">Desconto</option>
+              <option value="Outro">Outro</option>
+            </select>
+            
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="filtroFavoritos">
+              <span>⭐ Apenas Favoritos</span>
+            </label>
+          </div>
+          
+          <!-- Lista de Mensagens -->
+          <div id="containerMensagens" class="container-mensagens-rapidas">
+            <div class="empty-state">
+              <p>📭 Carregando mensagens...</p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <!-- ==================== FIM MODAL CONSULTAS ==================== -->
@@ -343,5 +409,6 @@
   <script src="scroll-gradient.js"></script>
   <script src="consultas.js"></script>
   <script src="calendario.js"></script>
+  <script src="mensagens-rapidas.js"></script>
 </body>
 </html>
