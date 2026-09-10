@@ -4,7 +4,6 @@
   box-sizing: border-box;
 }
 
-
 :root {
   --primary-color: #667eea;
   --secondary-color: #764ba2;
@@ -207,6 +206,26 @@ body {
 .btn-verify:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(245, 87, 108, 0.4);
+}
+
+.btn-consultas {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.btn-consultas:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+}
+
+.btn-mensagens {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+}
+
+.btn-mensagens:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(67, 233, 123, 0.4);
 }
 
 .btn-icon {
@@ -2781,4 +2800,498 @@ body {
 #modalConsultas.dark-mode .empty-state {
   background: #0f0f1e !important;
   color: #b0b0b0 !important;
+}
+
+/* ============================================
+   CALENDÁRIO VISUAL DE LEMBRETES
+   ============================================ */
+
+.calendario-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.calendario-header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendario-mes-ano {
+  font-size: 18px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.calendario-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.calendario-btn:hover {
+  background: #764ba2;
+}
+
+#containerCalendario {
+  display: block;
+  width: 100%;
+}
+
+.calendario-header {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 5px !important;
+  margin-bottom: 10px !important;
+  width: 100% !important;
+}
+
+.calendario-dia-semana {
+  text-align: center;
+  font-weight: 600;
+  color: #667eea;
+  padding: 10px 0;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.calendario-dias {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.calendario-celula-vazia {
+  aspect-ratio: 1;
+}
+
+.calendario-dia {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f5f7fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.calendario-dia:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.calendario-dia-numero {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.calendario-quantidade {
+  font-size: 11px;
+  background: #667eea;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.calendario-hoje {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+}
+
+.calendario-hoje .calendario-dia-numero {
+  color: white;
+}
+
+.calendario-com-lembrete {
+  background: #e3f2fd;
+  border-color: #667eea;
+}
+
+.calendario-com-lembrete .calendario-dia-numero {
+  color: #667eea;
+}
+
+/* Dark Mode */
+body.dark-mode .calendario-container {
+  background: #16213e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .calendario-mes-ano {
+  color: #667eea;
+}
+
+body.dark-mode .calendario-dia-semana {
+  color: #667eea;
+}
+
+body.dark-mode .calendario-dia {
+  background: #0f0f1e;
+  border-color: #2d3561;
+  color: #ffffff;
+}
+
+body.dark-mode .calendario-dia-numero {
+  color: #ffffff;
+}
+
+body.dark-mode .calendario-com-lembrete {
+  background: #1a2a4e;
+  border-color: #667eea;
+}
+
+/* ============================================
+   MENSAGENS RÁPIDAS
+   ============================================ */
+
+.mensagens-form-section {
+  background: #f5f7fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #667eea;
+}
+
+.mensagens-form-section h4 {
+  color: #667eea;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+#formMensagem {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#formMensagem .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#formMensagem input,
+#formMensagem textarea,
+#formMensagem select {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+#formMensagem textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+#formMensagem label {
+  font-weight: 600;
+  color: #333;
+}
+
+.mensagens-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+#searchMensagens {
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+}
+
+#filterCategoria,
+#filtroFavoritos {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.container-mensagens-rapidas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-mensagem-rapida {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.card-mensagem-rapida:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.mensagem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.mensagem-titulo-categoria {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: 1;
+}
+
+.mensagem-titulo {
+  margin: 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.categoria-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.categoria-confirmação {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.categoria-agradecimento {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.categoria-follow-up {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.categoria-promissória {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.categoria-desconto {
+  background: #fce4ec;
+  color: #c2185b;
+}
+
+.categoria-outro {
+  background: #f1f8e9;
+  color: #689f38;
+}
+
+.btn-favorito {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s;
+}
+
+.btn-favorito:hover {
+  transform: scale(1.2);
+}
+
+.btn-favorito.favorito {
+  color: #ffc107;
+}
+
+.mensagem-conteudo {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.mensagem-templates {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 10px;
+  padding: 8px;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.info-template {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.mensagem-stats {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.mensagem-acoes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-copy,
+.btn-editar,
+.btn-deletar {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+  flex: 1;
+  min-width: 80px;
+}
+
+.btn-copy {
+  background: #667eea;
+  color: white;
+}
+
+.btn-copy:hover {
+  background: #764ba2;
+}
+
+.btn-editar {
+  background: #ffc107;
+  color: white;
+}
+
+.btn-editar:hover {
+  background: #ffb300;
+}
+
+.btn-deletar {
+  background: #f44336;
+  color: white;
+}
+
+.btn-deletar:hover {
+  background: #da190b;
+}
+
+/* Dark Mode */
+body.dark-mode .mensagens-form-section {
+  background: #1a2a4e;
+  border-left-color: #667eea;
+}
+
+body.dark-mode .mensagens-form-section h4 {
+  color: #667eea;
+}
+
+body.dark-mode #formMensagem input,
+body.dark-mode #formMensagem textarea,
+body.dark-mode #formMensagem select {
+  background: #0f0f1e;
+  color: #ffffff;
+  border-color: #2d3561;
+}
+
+body.dark-mode #formMensagem label {
+  color: #ffffff;
+}
+
+body.dark-mode #searchMensagens {
+  background: #0f0f1e;
+  color: #ffffff;
+  border-color: #2d3561;
+}
+
+body.dark-mode #filterCategoria,
+body.dark-mode #filtroFavoritos {
+  background: #0f0f1e;
+  color: #ffffff;
+  border-color: #2d3561;
+}
+
+body.dark-mode .card-mensagem-rapida {
+  background: #0f0f1e;
+  border-color: #2d3561;
+}
+
+body.dark-mode .mensagem-titulo {
+  color: #ffffff;
+}
+
+body.dark-mode .mensagem-conteudo {
+  background: #1a2a4e;
+  color: #cccccc;
+}
+
+body.dark-mode .mensagem-templates,
+body.dark-mode .info-template {
+  background: #1a2a4e;
+  color: #aaaaaa;
+}
+
+/* Animação */
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.toast {
+  animation: slideIn 0.3s ease;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .mensagens-filters {
+    flex-direction: column;
+  }
+  
+  .mensagem-acoes {
+    flex-direction: column;
+  }
+  
+  .btn-copy,
+  .btn-editar,
+  .btn-deletar {
+    min-width: auto;
+    flex: 1;
+  }
 }
