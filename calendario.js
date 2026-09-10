@@ -3,6 +3,7 @@
  * Mostra dias com lembretes, navegação e legenda
  */
 
+
 const CALENDARIO = {
   mesAtual: new Date().getMonth() + 1,
   anoAtual: new Date().getFullYear(),
