@@ -2813,7 +2813,7 @@ body {
   padding: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin: 20px auto;
-  max-width: 500px;
+  max-width: 600px;
 }
 
 .calendario-header-nav {
@@ -2885,11 +2885,11 @@ body {
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 2px;
-  font-size: 8px;
+  font-size: 9px;
   transition: all 0.3s ease;
   position: relative;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
 }
 
 .calendario-dia:hover:not(.calendario-dia-vazio) {
@@ -2905,7 +2905,7 @@ body {
 .calendario-dia-numero {
   font-weight: 700;
   color: #333;
-  font-size: 9px;
+  font-size: 10px;
   margin-bottom: 0px;
   line-height: 1;
 }
@@ -2922,11 +2922,11 @@ body {
 .calendario-quantidade {
   background: #667eea;
   color: white;
-  padding: 0px 2px;
+  padding: 1px 2px;
   border-radius: 1px;
-  font-size: 6px;
+  font-size: 7px;
   font-weight: 700;
-  min-width: 11px;
+  min-width: 12px;
   text-align: center;
   line-height: 1;
 }
@@ -2938,7 +2938,7 @@ body {
 
 .calendario-hoje .calendario-dia-numero {
   color: white;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .calendario-hoje .calendario-quantidade {
