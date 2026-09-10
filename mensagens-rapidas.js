@@ -96,6 +96,8 @@ const MENSAGENS_RAPIDAS = {
   abrirModal() {
     if (this.modalMensagensRapidas) {
       this.modalMensagensRapidas.classList.remove('hidden');
+      // Ativar aba de mensagens cadastradas por padrão
+      this.ativarAba('lista');
       this.carregarMensagens();
       // Sincronizar dark mode
       this.sincronizarDarkMode();
