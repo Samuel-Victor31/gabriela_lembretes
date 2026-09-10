@@ -2872,11 +2872,11 @@ body {
 .calendario-grid-dias {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
-  gap: 0px !important;
+  gap: 6px !important;
   margin-bottom: 10px;
   width: 100%;
   padding: 12px;
-  background: #f5f7fa;
+  background: #1a2b4a;
   border-radius: 4px;
 }
 
@@ -2885,15 +2885,16 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f5f7fa;
-  border: 1px solid #1a2b4a;
-  border-radius: 0px;
+  background: #2d3e5f;
+  border: 1px solid #3d4f6f;
+  border-radius: 4px;
   padding: 0px;
   font-size: 10px;
   transition: all 0.3s ease;
   position: relative;
   width: 50px;
   height: 50px;
+  color: #fff;
 }
 
 .calendario-dia:hover:not(.calendario-dia-vazio) {
@@ -2908,10 +2909,12 @@ body {
 
 .calendario-dia-numero {
   font-weight: 700;
-  color: #333;
+  color: #fff;
   font-size: 11px;
   margin-bottom: 0px;
   line-height: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .calendario-com-lembrete {
@@ -2926,13 +2929,20 @@ body {
 .calendario-quantidade {
   background: #667eea;
   color: white;
-  padding: 1px 2px;
-  border-radius: 1px;
+  padding: 0px;
+  border-radius: 4px;
   font-size: 8px;
   font-weight: 700;
-  min-width: 13px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   line-height: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .calendario-hoje {
@@ -2943,6 +2953,7 @@ body {
 .calendario-hoje .calendario-dia-numero {
   color: white;
   font-size: 11px;
+  z-index: 2;
 }
 
 .calendario-hoje .calendario-quantidade {
