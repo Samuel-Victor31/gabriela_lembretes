@@ -289,6 +289,18 @@ const CALENDARIO = {
     
     conteudo.appendChild(lista);
     
+    // Botão Adicionar Lembrete
+    const btnAdicionar = document.createElement('button');
+    btnAdicionar.className = 'modal-lembretes-btn-adicionar';
+    btnAdicionar.textContent = '➕ Adicionar Lembrete';
+    btnAdicionar.addEventListener('click', () => {
+      // Fechar modal de visualização
+      modal.remove();
+      // Abrir formulário com data preenchida
+      this.abrirFormularioComData(data);
+    });
+    conteudo.appendChild(btnAdicionar);
+    
     // Botão fechar
     const btnFechar = document.createElement('button');
     btnFechar.className = 'modal-lembretes-btn-fechar';
