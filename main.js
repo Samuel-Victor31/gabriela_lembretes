@@ -30,6 +30,7 @@ const APP = {
   btnCancelarEditar: null,
 
   lembreteSelecionado: null,
+  lembretes: [],  // ← Adicionar isto para o calendário acessar
   lembretesVerificar: [],
   intervaloMensagens: null,
 
@@ -235,6 +236,9 @@ const APP = {
     try {
       const response = await fetch(`${this.API_URL}/api/lembretes`);
       const lembretes = await response.json();
+      
+      // Salvar em window.APP para calendário acessar
+      this.lembretes = lembretes;
 
       const lembretesHoje = lembretes.filter(l => l.data && l.data.startsWith(hojeFormatado));
 
@@ -483,6 +487,9 @@ const APP = {
 
       const response = await fetch(`${this.API_URL}/api/lembretes`);
       const lembretes = await response.json();
+      
+      // Salvar em window.APP para calendário acessar
+      this.lembretes = lembretes;
 
       // IMPORTANTE: Não filtrar por data aqui
       // Carregar TODOS os lembretes
