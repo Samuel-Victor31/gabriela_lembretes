@@ -30,8 +30,10 @@ const CALENDARIO = {
       this.btnMesProximo.addEventListener('click', () => this.irMesProximo());
     }
     
-    // Renderizar calendário
-    this.renderizar();
+    // Aguardar lembretes carregarem antes de renderizar
+    setTimeout(() => {
+      this.renderizar();
+    }, 1000);
   },
   
   irMesAnterior() {
