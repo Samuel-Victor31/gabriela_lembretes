@@ -3575,3 +3575,174 @@ body.dark-mode .info-template {
     flex: 1;
   }
 }
+
+/* ==================== MODAL MENSAGENS RÁPIDAS NOVO ==================== */
+
+#modalMensagensRapidas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+
+#modalMensagensRapidas.hidden {
+  display: none;
+  opacity: 0;
+}
+
+#modalMensagensRapidas.hidden {
+  pointer-events: none;
+}
+
+#modalMensagensRapidas .modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 800px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+#modalMensagensRapidas .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 2px solid #e0e0e0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+#modalMensagensRapidas .modal-header h2 {
+  color: white;
+  margin: 0;
+  font-size: 20px;
+}
+
+#modalMensagensRapidas .modal-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+#modalMensagensRapidas .modal-close:hover {
+  transform: scale(1.2);
+}
+
+/* Abas */
+.modal-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  border-bottom: 2px solid #e0e0e0;
+  background: #f5f5f5;
+}
+
+.modal-tab-button {
+  flex: 1;
+  padding: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.modal-tab-button:hover {
+  background: #f0f0f0;
+  color: #667eea;
+}
+
+.modal-tab-button.active {
+  color: #667eea;
+  border-bottom-color: #667eea;
+}
+
+/* Conteúdo das abas */
+.modal-tab-pane {
+  display: none;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-tab-pane.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark mode para modal mensagens rápidas */
+body.dark-mode #modalMensagensRapidas .modal-content {
+  background: #0f0f1e;
+  color: #ccc;
+}
+
+body.dark-mode #modalMensagensRapidas .modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom-color: #2d3561;
+}
+
+body.dark-mode .modal-tabs {
+  background: #1a2a4e;
+  border-bottom-color: #2d3561;
+}
+
+body.dark-mode .modal-tab-button {
+  color: #aaa;
+}
+
+body.dark-mode .modal-tab-button:hover {
+  background: #1e3257;
+  color: #667eea;
+}
+
+body.dark-mode .modal-tab-button.active {
+  color: #667eea;
+  border-bottom-color: #667eea;
+}
+
+body.dark-mode .modal-tab-pane {
+  background: #0f0f1e;
+}
+
+body.dark-mode #modalMensagensRapidas input,
+body.dark-mode #modalMensagensRapidas select,
+body.dark-mode #modalMensagensRapidas textarea {
+  background: #1a2a4e;
+  color: #ccc;
+  border-color: #2d3561;
+}
+
+body.dark-mode #modalMensagensRapidas input::placeholder,
+body.dark-mode #modalMensagensRapidas textarea::placeholder {
+  color: #666;
+}
+
+body.dark-mode #modalMensagensRapidas label {
+  color: #ccc;
+}
+
+/* ==================== FIM MODAL MENSAGENS RÁPIDAS NOVO ====================
